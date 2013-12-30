@@ -10,7 +10,9 @@
     });
 
     codiag.style = {
-        bubblePadding: 20
+        bubblePadding: 20,
+        font: "sans-serif",
+        fontSize: 12
     };
 
     (codiag.util || (codiag.util = {})).uuid = function() {
@@ -27,10 +29,29 @@
 
 
     codiag.createBubble = function(shapeOptions, connections) {
-        var result = new codiag.Bubble(shapeOptions, connections);
+        var options = fabric.util.object.extend({}, shapeOptions);
+        var shouldBeEditableImmediately = !options.hasOwnProperty("text");
+        if(!(options.hasOwnProperty("left") || options.hasOwnProperty("top"))) {
+            var coords = codiag.input.getMousePosition();
+            fabric.util.object.extend(options, {
+                left: coords.x,
+                top: coords.y
+            });
+        }
+
+        if(shouldBeEditableImmediately && !options.hasOwnProperty("width")) {
+            options.width = 100;
+        }
+
+        var result = new codiag.Bubble(options, connections);
         var id = codiag.util.uuid();
         result.id = result.shape.id = id;
         bubbles[id] = result;
+        if(shouldBeEditableImmediately) {
+            codiag.canvas.setActiveObject(result.shape);
+            codiag.changeEditedBubble(result.shape);
+        }
+
         return result;
     };
 

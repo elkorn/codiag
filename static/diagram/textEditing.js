@@ -3,6 +3,7 @@
 
     var currentlyEditedBubble;
     var textInput;
+    var diagramContainer = document.querySelector(".diagram-container");
 
     function applyTextChangesToEditedBubble() {
         currentlyEditedBubble.setText(textInput.value);
@@ -17,12 +18,12 @@
         textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - codiag.style.bubblePadding);
         textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - codiag.style.bubblePadding);
         textInput.style.position = "absolute";
-        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubblePadding - 5);
-        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubblePadding - 5);
+        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubblePadding / 2 - 1);
+        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubblePadding / 2 - 1);
         textInput.style["border-radius"] = textInput.style.padding = pixels(15);
         textInput.value = codiag.getBubble(currentlyEditedBubble.id).getText();
         textInput.style.resize = "none";
-        document.body.appendChild(textInput);
+        diagramContainer.appendChild(textInput);
         setCaretPosition(textInput, textInput.value.length);
     }
 
@@ -46,13 +47,11 @@
     codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
         console.log("object:enableEditMode");
         codiag.changeEditedBubble(e.target);
-        return false;
     });
 
-    codiag.canvas.on("selection:cleared", function clearEditMode(e) {
-        console.log("selection:cleared")
+    codiag.canvas.on("selection:cleared", function clearEditMode() {
+        console.log("selection:cleared");
         codiag.changeEditedBubble(null);
-        return false;
     });
 
     codiag.canvas.on("object:selected", function(e) {
@@ -61,7 +60,6 @@
             var selectingCurrentBubble = e.target === currentlyEditedBubble;
             if (!selectingCurrentBubble) {
                 codiag.changeEditedBubble(null);
-                return false;
             }
         }
     });
@@ -74,7 +72,7 @@
         }
 
         if (textInput) {
-            document.body.removeChild(textInput);
+            diagramContainer.removeChild(textInput);
             textInput = null;
         }
 

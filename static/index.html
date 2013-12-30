@@ -1,9 +1,21 @@
 <html ng-app>
 <head>
     <title>codiag - collaborative diagramming tool</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
 </head>
 <body>
-    <canvas id="c"></canvas>
+    <ul class="menu">
+        <li>
+            <button id="addStandalone">Add standalone bubble</button>
+            <button id="addChild">Add child bubble</button>
+        </li>
+    </ul>
+    <div class="diagram-container">
+        <canvas id="c"></canvas>
+    </div>
 
     <script src="http://fabricjs.com/build/files/text,easing,interaction,shadow.js"></script>
     <script src="http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
@@ -14,6 +26,7 @@
 
     <script src="diagram/util.js"></script>
     <script src="diagram/diagram.js"></script>
+    <script src="diagram/mouseTracker.js"></script>
     <script src="diagram/Bubble.js"></script>
     <script src="diagram/Connection.js"></script>
     <script src="diagram/main.js"></script>

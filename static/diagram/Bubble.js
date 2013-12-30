@@ -21,7 +21,7 @@
             textAlign: "center"
         });
 
-        rect.setWidth(text.width + 2 * codiag.style.bubblePadding);
+        rect.setWidth((shapeOptions.width || text.width) + 2 * codiag.style.bubblePadding);
         rect.setHeight(text.height + 2 * codiag.style.bubblePadding);
         var result = new fabric.Group([rect, text], {
             top: top,
@@ -62,9 +62,8 @@
 
     codiag.Bubble = function(originalOptions, connections) {
         this.options = fabric.util.object.clone(originalOptions);
+        var canvas = this.options.canvas = this.options.canvas || codiag.canvas;
         Object.freeze(this.options);
-
-        var canvas = this.options.canvas || codiag.canvas;
         var self = this;
 
         this.shape = createBubbleObject(this.options);
@@ -89,14 +88,14 @@
         setText: function(newText) {
             console.log("setting text");
             this.options.canvas.remove(this.shape);
-            this.shape = createBubbleObject(
-                fabric.util.object.extend(
-                    fabric.util.object.clone(this.options), {
-                        text: newText,
-                        id: this.id,
-                        top: this.shape.top,
-                        left: this.shape.left
-                    }));
+            var workingOptions = codiag.util.extendClone(this.options, {
+                text: newText,
+                id: this.id,
+                top: this.shape.top,
+                left: this.shape.left
+            });
+            workingOptions.width = null;
+            this.shape = createBubbleObject(workingOptions);
             this.updateConnections();
         },
         updateConnections: function() {
