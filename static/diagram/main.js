@@ -1,11 +1,7 @@
 /* global fabric _*/
 "use strict";
 
-var canvas = new fabric.Canvas("c");
-canvas.setWidth(1920);
-canvas.setHeight(1080);
-var size = 100;
-
+var canvas = codiag.canvas;
 var x = new codiag.Bubble({
     text: "lorem ipsum dolor sit amet\nthis is a multiline text\nit should be centered",
     left: 10,

@@ -6,12 +6,15 @@ canvas.setWidth(1920);
 canvas.setHeight(1080);
 var size = 100;
 
+codiag.canvas = canvas;
+
 var x = new codiag.Bubble({
     text: "lorem ipsum dolor sit amet\nthis is a multiline text\nit should be centered",
     left: 10,
     top: 10,
     canvas: canvas
 });
+
 var y = new codiag.Bubble({
     text: "the second element\nwith multiline text",
     left: 300,

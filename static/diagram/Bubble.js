@@ -61,6 +61,10 @@
             // }
         };
 
+        this.getText = function() {
+            return this.shape.item(1).getText();
+        };
+
         shapeOptions.canvas.add(result);
         this.connections = connections || {
             input: [],
@@ -75,6 +79,7 @@
         });
 
         this.shape = result;
+        this.shape.id = this.id = Math.uuid();
         return this;
     };
 
