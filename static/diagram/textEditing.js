@@ -3,19 +3,46 @@
 
     var currentlyEditedBubble;
     var textInput;
+
+    function applyTextChangesToEditedBubble() {
+        currentlyEditedBubble.setText(textInput.value);
+    }
+
+    function pixels(value) {
+        return parseInt(value, 10) + "px";
+    }
+
+    function createCanvasInputForEditedBubble() {
+        textInput = document.createElement("textarea");
+        textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - 2 * codiag.style.bubblePadding);
+        textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - 2 * codiag.style.bubblePadding);
+        textInput.style.position = "absolute";
+        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubblePadding);
+        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubblePadding);
+        textInput.value = codiag.getBubble(currentlyEditedBubble.id).getText();
+        document.body.appendChild(textInput);
+        textInput.focus();
+    }
+
     codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
+        console.log("object:enableEditMode");
         codiag.changeEditedBubble(e.target);
+        return false;
     });
 
-    codiag.canvas.on("before:selection:cleared", function clearEditMode() {
+    codiag.canvas.on("selection:cleared", function clearEditMode(e) {
+        console.log("selection:cleared")
         codiag.changeEditedBubble(null);
+        return false;
     });
 
     codiag.canvas.on("object:selected", function(e) {
         if (currentlyEditedBubble) {
+            console.log("object:selected");
             var selectingCurrentBubble = e.target === currentlyEditedBubble;
             if (!selectingCurrentBubble) {
                 codiag.changeEditedBubble(null);
+                return false;
             }
         }
     });
@@ -24,6 +51,12 @@
         console.log("changing currentlyEditedBubble to", target);
         if (currentlyEditedBubble) {
             currentlyEditedBubble.isInEditMode = false;
+            applyTextChangesToEditedBubble();
+        }
+
+        if (textInput) {
+            document.body.removeChild(textInput);
+            textInput = null;
         }
 
         currentlyEditedBubble = target;
@@ -32,24 +65,5 @@
             createCanvasInputForEditedBubble();
         }
     };
-
-    function createCanvasInputForEditedBubble() {
-        textInput = new CanvasInput({
-            canvas: codiag.canvas,
-            fontSize: 18,
-            fontFamily: "Arial",
-            fontColor: "#212121",
-            fontWeight: "bold",
-            width: currentlyEditedBubble.getWidth(),
-            height: currentlyEditedBubble.getHeight(),
-            padding: 8,
-            borderWidth: 1,
-            borderColor: "#000",
-            borderRadius: 3,
-            boxShadow: "1px 1px 0px #fff",
-            innerShadow: "0px 0px 5px rgba(0, 0, 0, 0.5)",
-            value: currentlyEditedBubble.getText()
-        });
-    }
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.CanvasInput);

@@ -1,7 +1,7 @@
 (function(window, fabric, codiag, _, undefined) {
     "use strict";
-    var padding = 20;
-    codiag.Bubble = function(shapeOptions, connections) {
+
+    function createBubbleObject(shapeOptions) {
         var left = shapeOptions.left;
         var top = shapeOptions.top;
         var opts = fabric.util.object.extend(fabric.util.object.clone(shapeOptions), {
@@ -16,87 +16,97 @@
 
         var rect = new fabric.Rect(opts);
         var text = new fabric.Text(shapeOptions.text || "", {
-            top: padding,
-            left: padding,
+            top: codiag.style.bubblePadding,
+            left: codiag.style.bubblePadding,
             textAlign: "center"
         });
 
-        rect.setWidth(text.width + 2 * padding);
-        rect.setHeight(text.height + 2 * padding);
+        rect.setWidth(text.width + 2 * codiag.style.bubblePadding);
+        rect.setHeight(text.height + 2 * codiag.style.bubblePadding);
         var result = new fabric.Group([rect, text], {
             top: top,
             left: left
         });
 
-        var self = this;
-
         result.hasControls = false;
-        this.setText = function(newText) {
-            shapeOptions.canvas.remove(result);
-            shapeOptions.top = result.top;
-            shapeOptions.left = result.left;
-            result = new codiag.Bubble(fabric.util.object.extend(shapeOptions, {
-                text: newText
-            }));
+        result.id = shapeOptions.id;
 
-            // Causes trouble with positioning.
-            // if(typeof(newText) !== "undefined") {
-            //     var textNode = result.item(1);
-            //     var rectNode = result.item(0);
-            //     textNode.set({
-            //         text: newText || ""
-            //     });
-
-            //     var newSize = {
-            //         width: textNode.width + 2 * padding,
-            //         height: textNode.height + 2 * padding
-            //     };
-
-            //     rectNode.set(fabric.util.object.extend(newSize, { left: 0, top: 0}));
-            //     result.set(newSize);
-            //     // textNode.set({
-            //     //     left: 0,
-            //     //     top: 0
-            //     // });
-            // }
+        result.setText = function(newText) {
+            codiag.getBubble(this.id).setText(newText);
         };
 
-        this.getText = function() {
-            return this.shape.item(1).getText();
+        result.getText = function() {
+            return codiag.getBubble(this.id).getText();
         };
 
         shapeOptions.canvas.add(result);
+
+        return result;
+    }
+
+    function updateOutputConnectionCoords(obj, connection) {
+        var coords = codiag.getLineCoords(obj, null, "json");
+        connection.set({
+            x1: coords.x1,
+            y1: coords.y1
+        });
+    }
+
+    function updateInputConnectionCoords(obj, connection) {
+        var coords = codiag.getLineCoords(null, obj, "json");
+        connection.set({
+            x2: coords.x2,
+            y2: coords.y2
+        });
+    }
+
+    codiag.Bubble = function(originalOptions, connections) {
+        this.options = fabric.util.object.clone(originalOptions);
+        Object.freeze(this.options);
+
+        var canvas = this.options.canvas || codiag.canvas;
+        var self = this;
+
+        this.shape = createBubbleObject(this.options);
         this.connections = connections || {
             input: [],
             output: []
         };
 
-        shapeOptions.canvas.on("object:moving", function(e) {
-            if (e.target === result) {
-                self.connections.input.forEach(codiag.Bubble.prototype.updateInputConnectionCoords.bind(self));
-                self.connections.output.forEach(codiag.Bubble.prototype.updateOutputConnectionCoords.bind(self));
+        canvas.on("object:moving", function(e) {
+            if (e.target === self.shape) {
+                self.updateConnections();
             }
         });
 
-        this.shape = result;
-        this.shape.id = this.id = Math.uuid();
         return this;
     };
 
     codiag.Bubble.prototype = {
-        updateOutputConnectionCoords: function(connection) {
-            var coords = codiag.getLineCoords(this, null, "json");
-            connection.set({
-                x1: coords.x1,
-                y1: coords.y1
-            });
+        getText: function() {
+            return this.shape.item(1).getText();
         },
-        updateInputConnectionCoords: function(connection) {
-            var coords = codiag.getLineCoords(null, this, "json");
-            connection.set({
-                x2: coords.x2,
-                y2: coords.y2
-            });
+        setText: function(newText) {
+            console.log("setting text");
+            this.options.canvas.remove(this.shape);
+            this.shape = createBubbleObject(
+                fabric.util.object.extend(
+                    fabric.util.object.clone(this.options), {
+                        text: newText,
+                        id: this.id,
+                        top: this.shape.top,
+                        left: this.shape.left
+                    }));
+        },
+        updateConnections: function() {
+            this.updateInputConnections();
+            this.updateOutputConnections();
+        },
+        updateOutputConnections: function() {
+            this.connections.output.forEach(updateOutputConnectionCoords.bind(this, this));
+        },
+        updateInputConnections: function() {
+            this.connections.input.forEach(updateInputConnectionCoords.bind(this, this));
         }
     };
 })(window, window.fabric, window.codiag || (window.codiag = {}), window._);
