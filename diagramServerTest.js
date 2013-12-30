@@ -23,7 +23,6 @@ var diagramServerTest = {
     },
             
     setup: function() {
-        console.log(this)
         var self = this;
         
         self.config.$publishButton.prop('disabled', true);
@@ -50,6 +49,7 @@ var diagramServerTest = {
                 self.sess.subscribe(fieldValue, function(topic, event) {
                     console.log('Topic: ' + topic);
                     console.log('Event: ' + event);
+                    self.config.$eventText.val(event);
                 });
                 
                 self.topic = fieldValue;
