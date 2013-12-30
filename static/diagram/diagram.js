@@ -43,26 +43,14 @@
         return connections[id];
     };
 
-    // TODO: Refactor to put into Connection.js
     codiag.createConnection = function(options) {
-        var connection = new fabric.Line(codiag.getLineCoords(options.from, options.to), {
-            stroke: "red",
-            fill: "red",
-            originX: "center",
-            originY: "center",
-            strokeWidth: 5,
-            selectable: false
-        });
-
-        // TODO: Refactor to work on IDs only.
+        // TODO: Refactor to work on IDs only?
+        var connection = new codiag.Connection(options);
         options.from.connections.output.push(connection);
         options.to.connections.input.push(connection);
-
-        options.canvas.add(connection);
-
         connection.id = codiag.util.uuid();
         connections[connection.id] = connection;
         connection.sendToBack();
     };
 
-})(window, window.fabric, window.codiag = {});
+})(window, window.fabric, (window.codiag || (window.codiag = {})));

@@ -14,14 +14,33 @@
 
     function createCanvasInputForEditedBubble() {
         textInput = document.createElement("textarea");
-        textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - 2 * codiag.style.bubblePadding);
-        textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - 2 * codiag.style.bubblePadding);
+        textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - codiag.style.bubblePadding);
+        textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - codiag.style.bubblePadding);
         textInput.style.position = "absolute";
-        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubblePadding);
-        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubblePadding);
+        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubblePadding - 5);
+        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubblePadding - 5);
+        textInput.style["border-radius"] = textInput.style.padding = pixels(15);
         textInput.value = codiag.getBubble(currentlyEditedBubble.id).getText();
+        textInput.style.resize = "none";
         document.body.appendChild(textInput);
-        textInput.focus();
+        setCaretPosition(textInput, textInput.value.length);
+    }
+
+    function setCaretPosition(elem, caretPos) {
+        if (elem !== null) {
+            if (elem.hasOwnProperty("createTextRange")) {
+                var range = elem.createTextRange();
+                range.move("character", caretPos);
+                range.select();
+            } else {
+                if (elem.hasOwnProperty("selectionStart")) {
+                    elem.focus();
+                    elem.setSelectionRange(caretPos, caretPos);
+                } else {
+                    elem.focus();
+                }
+            }
+        }
     }
 
     codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {

@@ -26,4 +26,21 @@
         return result;
     };
 
+    var defaults = {
+        stroke: "red",
+        fill: "red",
+        originX: "center",
+        originY: "center",
+        strokeWidth: 5,
+        selectable: false
+    };
+
+    codiag.Connection = function(options) {
+        var result = new fabric.Line(
+            codiag.getLineCoords(options.from, options.to),
+            codiag.util.extendClone(defaults, options));
+        options.canvas.add(result);
+        return result;
+    };
+
 })(window, window.fabric, window.codiag || (window.codiag = {}), window._);

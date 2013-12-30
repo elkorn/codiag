@@ -97,6 +97,7 @@
                         top: this.shape.top,
                         left: this.shape.left
                     }));
+            this.updateConnections();
         },
         updateConnections: function() {
             this.updateInputConnections();
