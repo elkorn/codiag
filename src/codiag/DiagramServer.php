@@ -14,10 +14,8 @@ class DiagramServer implements WampServerInterface {
      */
     public function onOpen(ConnectionInterface $conn) {
         echo "New connection: {$conn->resourceId}\n";
-        $conn->Diagram        = new \StdClass;
+        $conn->Diagram = new \StdClass;
         $conn->Diagram->id = null;
-        
-        echo "New connection: {$conn->resourceId}\n";
     }
 
     /**
@@ -62,7 +60,7 @@ class DiagramServer implements WampServerInterface {
         
         $conn->Diagram->id = $diagramId;
         
-        //$conn->event($diagramId, $this->diagrams[$diagramId]->data); // TODO
+        // TODO: Send current diagram status to $conn
     }
 
     /**
@@ -78,9 +76,6 @@ class DiagramServer implements WampServerInterface {
         if ($this->diagrams[$diagramId]->connections->count() == 0) {
             echo "No connections in {$diagramId}\n";
             unset($this->diagrams[$diagramId]);
-            //$this->broadcast(static::CTRL_ROOMS, array($topic, 0));
-        } else {
-            //$this->broadcast($topic, array('leftRoom', $conn->WAMP->sessionId));
         }
     }
 
@@ -120,13 +115,5 @@ class DiagramServer implements WampServerInterface {
                 $client->event($diagramId, $msg);
             }
         }
-    }
-
-    /**
-     * @param string
-     * @return string
-     */
-    protected function escape($string) {
-        return htmlspecialchars($string);
     }
 }

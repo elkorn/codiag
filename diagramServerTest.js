@@ -66,13 +66,6 @@ var diagramServerTest = {
                 self.sess.publish(self.topic, fieldValue);
             }
         });
-       
-       //old code
-
-//        self.connection.onmessage = function(e) {
-//            var chatWindowValue = self.config.$mainWindow.val();
-//            self.config.$mainWindow.val(chatWindowValue + e.data + "\n");
-//        };
     },
             
     checkConfig: function() {
