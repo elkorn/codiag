@@ -31,4 +31,27 @@
         };
     };
 
+    codiag.util.findFirst = function(collection) {
+        return function(fn) {
+            var result;
+            collection.some(function(element, index) {
+                if (fn(element, index)) {
+                    result = element;
+                    return true;
+                }
+            });
+            return result;
+        };
+    };
+
+    codiag.util.removeIfContains = function(collection, element) {
+        var index = collection.indexOf(element);
+        var contains = index !== -1;
+        if (contains) {
+            collection.splice(index, 1);
+        }
+
+        return contains;
+    };
+
 })(window, window.fabric, window.codiag || (window.codiag = {}), window._);

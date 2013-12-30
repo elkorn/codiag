@@ -49,10 +49,15 @@
     }
 
     codiag.changeEditedBubble = function(target) {
-        console.log("changing currentlyEditedBubble to", target);
+        console.log("changing currentlyEditedBubble to", (target ? target.id : target));
         if (currentlyEditedBubble) {
             currentlyEditedBubble.isInEditMode = false;
             applyTextChangesToEditedBubble();
+            var editedBubble = codiag.getBubble(currentlyEditedBubble.id);
+            if (!editedBubble.getText().length) {
+                codiag.removeBubble(editedBubble.shape);
+            }
+
         }
 
         if (textInput) {
@@ -68,10 +73,14 @@
     };
 
     codiag.cancelEditing = function() {
-        if(currentlyEditedBubble && textInput) {
+        if (currentlyEditedBubble && textInput) {
             textInput.value = currentlyEditedBubble.getText();
             codiag.changeEditedBubble(null);
         }
+    };
+
+    codiag.isEditingABubble = function() {
+        return !!currentlyEditedBubble;
     };
 
     codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
@@ -94,8 +103,8 @@
         }
     });
 
-    codiag.canvas.on("object:moving", function(e){
-        if(e.target === currentlyEditedBubble && textInput) {
+    codiag.canvas.on("object:moving", function(e) {
+        if (e.target === currentlyEditedBubble && textInput) {
             updateInputPosition();
         }
     });

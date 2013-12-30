@@ -27,7 +27,6 @@
 
     codiag.canvas = canvas;
 
-
     codiag.createBubble = function(shapeOptions, connections) {
         var options = fabric.util.object.extend({}, shapeOptions);
         var shouldBeEditableImmediately = !options.hasOwnProperty("text");
@@ -83,6 +82,34 @@
         connection.id = codiag.util.uuid();
         connections[connection.id] = connection;
         connection.sendToBack();
+    };
+
+    codiag.removeConnection = function(connection) {
+        Object.keys(bubbles).forEach(function(key) {
+            var bubble = bubbles[key];
+            if (!codiag.util.removeIfContains(bubble.connections.input, connection)) {
+                codiag.util.removeIfContains(bubble.connections.output, connection);
+            }
+        });
+
+        delete connections[connection.id];
+        canvas.remove(connection);
+        connection = null;
+    };
+
+    codiag.removeBubble = function(bubble) {
+        var toRemove = bubbles[bubble.id];
+        var removeConnection = codiag.removeConnection.bind(codiag);
+        toRemove.connections.input.forEach(removeConnection);
+        toRemove.connections.output.forEach(removeConnection);
+        delete bubbles[bubble.id];
+        canvas.remove(bubble);
+    };
+
+    codiag.removeCurrentBubble = function() {
+        if (!codiag.isEditingABubble()) {
+            codiag.removeBubble(canvas.getActiveObject());
+        }
     };
 
 })(window, window.fabric, (window.codiag || (window.codiag = {})));
