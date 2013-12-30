@@ -38,6 +38,7 @@
                 range.move("character", caretPos);
                 range.select();
             } else {
+                console.log("focusing");
                 if (elem.hasOwnProperty("selectionStart")) {
                     elem.focus();
                     elem.setSelectionRange(caretPos, caretPos);

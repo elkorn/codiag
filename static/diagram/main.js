@@ -21,3 +21,7 @@ codiag.createConnection({
     to: y,
     canvas: canvas
 });
+
+$("[data-toggle*='popover']").popover();
+$("[data-toggle*='tooltip']").tooltip();
+$("[data-toggle*='button']").button();

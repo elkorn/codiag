@@ -1,9 +1,12 @@
 (function(window, fabric, codiag, undefined) {
     "use strict";
-
+    /*
+        https://github.com/kangax/fabric.js/wiki/Working-with-events
+     */
     // var currentlyEditedBubble;
     var bubbles = {};
     var connections = {};
+    var isInCreationMode = false;
 
     var canvas = new fabric.Canvas("c", {
         selection: false
@@ -50,6 +53,10 @@
             codiag.canvas.setActiveObject(result.shape);
             codiag.changeEditedBubble(result.shape);
         }
+
+        codiag.canvas.fire("bubble:created", {
+            target: result
+        });
 
         return result;
     };
@@ -109,6 +116,30 @@
     codiag.removeCurrentBubble = function() {
         if (!codiag.isEditingABubble()) {
             codiag.removeBubble(canvas.getActiveObject());
+        }
+    };
+
+    function createBubbleOnDemand() {
+        var coords = codiag.input.getMousePosition();
+        disableCreationMode();
+        codiag.createBubble({
+            left: coords.x,
+            top: coords.y
+        });
+    }
+
+    function disableCreationMode() {
+        codiag.canvas.off("mouse:down", createBubbleOnDemand);
+        isInCreationMode = false;
+        codiag.canvas.fire("mode:creation:disabled");
+    }
+
+    codiag.toggleCreationMode = function() {
+        if (isInCreationMode) {
+            disableCreationMode();
+        } else {
+            isInCreationMode = true;
+            codiag.canvas.on("mouse:down", createBubbleOnDemand);
         }
     };
 
