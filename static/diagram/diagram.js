@@ -31,7 +31,7 @@
     codiag.createBubble = function(shapeOptions, connections) {
         var options = fabric.util.object.extend({}, shapeOptions);
         var shouldBeEditableImmediately = !options.hasOwnProperty("text");
-        if(!(options.hasOwnProperty("left") || options.hasOwnProperty("top"))) {
+        if (!(options.hasOwnProperty("left") || options.hasOwnProperty("top"))) {
             var coords = codiag.input.getMousePosition();
             fabric.util.object.extend(options, {
                 left: coords.x,
@@ -39,7 +39,7 @@
             });
         }
 
-        if(shouldBeEditableImmediately && !options.hasOwnProperty("width")) {
+        if (shouldBeEditableImmediately && !options.hasOwnProperty("width")) {
             options.width = 100;
         }
 
@@ -47,12 +47,23 @@
         var id = codiag.util.uuid();
         result.id = result.shape.id = id;
         bubbles[id] = result;
-        if(shouldBeEditableImmediately) {
+        if (shouldBeEditableImmediately) {
             codiag.canvas.setActiveObject(result.shape);
             codiag.changeEditedBubble(result.shape);
         }
 
         return result;
+    };
+
+    codiag.createChildBubble = function(shapeOptions, connections) {
+        var parent = codiag.getBubble(codiag.canvas.getActiveObject().id);
+        if (parent) {
+            var child = codiag.createBubble(shapeOptions, connections);
+            codiag.createConnection({
+                from: parent,
+                to: child
+            });
+        }
     };
 
     codiag.getBubble = function(id) {

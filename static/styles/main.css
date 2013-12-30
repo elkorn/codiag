@@ -1,8 +1,9 @@
 .menu {
-    /*position: absolute;*/
+    position: fixed;
     list-style-type: none;
-    /*top: 0;*/
-    /*left: 0;*/
+    top: 0;
+    left: 0;
+    z-index: 1000;
 }
 
 .diagram-container {

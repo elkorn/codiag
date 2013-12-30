@@ -3,7 +3,8 @@
 
     var hotkeys = {
         "ADD_BUBBLE": "enter",
-        "ADD_CHILD_BUBBLE": "insert"
+        "ADD_CHILD_BUBBLE": "ins",
+        "CANCEL": "escape"
     };
 
     Mousetrap.bind("space", function() {
@@ -26,12 +27,23 @@
     });
 
     Mousetrap.bind(hotkeys.ADD_BUBBLE, function() {
-        console.log("Adding bubble");
         var activeObject = codiag.canvas.getActiveObject();
-        if (!(activeObject && activeObject.isInEditMode)) {
+        if ((activeObject && !activeObject.isInEditMode) || !activeObject) {
             codiag.createBubble();
             return false;
         }
+    });
+
+    Mousetrap.bind(hotkeys.ADD_CHILD_BUBBLE, function() {
+        var activeObject = codiag.canvas.getActiveObject();
+        if (activeObject) {
+            codiag.createChildBubble();
+            return false;
+        }
+    });
+
+    Mousetrap.bind(hotkeys.CANCEL, function() {
+        codiag.cancelEditing();
     });
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.Mousetrap);

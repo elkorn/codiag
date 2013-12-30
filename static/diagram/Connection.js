@@ -39,7 +39,7 @@
         var result = new fabric.Line(
             codiag.getLineCoords(options.from, options.to),
             codiag.util.extendClone(defaults, options));
-        options.canvas.add(result);
+        (options.canvas || codiag.canvas).add(result);
         return result;
     };
 

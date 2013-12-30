@@ -16,27 +16,6 @@ var y = codiag.createBubble({
     canvas: canvas
 });
 
-var xcp = x.shape.getCenterPoint();
-var ycp = y.shape.getCenterPoint();
-
-function updateInputConnectionCoords(result) {
-    return function(connection) {
-        connection.set({
-            x2: result.left,
-            y2: result.top
-        });
-    };
-}
-
-function updateOutputConnectionCoords(result) {
-    return function(connection) {
-        connection.set({
-            x1: result.left,
-            y1: result.top
-        });
-    };
-}
-
 codiag.createConnection({
     from: x,
     to: y,

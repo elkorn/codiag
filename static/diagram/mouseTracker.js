@@ -11,7 +11,7 @@
         coords.y = data.e.layerY;
     }
 
-    codiag.canvas.on("mouse:move", codiag.util.debounce(trackPosition, 100));
+    codiag.canvas.on("mouse:move", codiag.util.debounce(trackPosition, 10));
 
     (codiag.input || (codiag.input = {})).getMousePosition = function() {
         return coords;

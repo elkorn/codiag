@@ -13,14 +13,18 @@
         return parseInt(value, 10) + "px";
     }
 
+    function updateInputPosition() {
+        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubblePadding / 2 - 1);
+        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubblePadding / 2 - 1);
+    }
+
     function createCanvasInputForEditedBubble() {
         textInput = document.createElement("textarea");
         textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - codiag.style.bubblePadding);
         textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - codiag.style.bubblePadding);
         textInput.style.position = "absolute";
-        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubblePadding / 2 - 1);
-        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubblePadding / 2 - 1);
         textInput.style["border-radius"] = textInput.style.padding = pixels(15);
+        updateInputPosition();
         textInput.value = codiag.getBubble(currentlyEditedBubble.id).getText();
         textInput.style.resize = "none";
         diagramContainer.appendChild(textInput);
@@ -44,6 +48,32 @@
         }
     }
 
+    codiag.changeEditedBubble = function(target) {
+        console.log("changing currentlyEditedBubble to", target);
+        if (currentlyEditedBubble) {
+            currentlyEditedBubble.isInEditMode = false;
+            applyTextChangesToEditedBubble();
+        }
+
+        if (textInput) {
+            diagramContainer.removeChild(textInput);
+            textInput = null;
+        }
+
+        currentlyEditedBubble = target;
+        if (currentlyEditedBubble) {
+            currentlyEditedBubble.isInEditMode = true;
+            createCanvasInputForEditedBubble();
+        }
+    };
+
+    codiag.cancelEditing = function() {
+        if(currentlyEditedBubble && textInput) {
+            textInput.value = currentlyEditedBubble.getText();
+            codiag.changeEditedBubble(null);
+        }
+    };
+
     codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
         console.log("object:enableEditMode");
         codiag.changeEditedBubble(e.target);
@@ -64,23 +94,10 @@
         }
     });
 
-    codiag.changeEditedBubble = function(target) {
-        console.log("changing currentlyEditedBubble to", target);
-        if (currentlyEditedBubble) {
-            currentlyEditedBubble.isInEditMode = false;
-            applyTextChangesToEditedBubble();
+    codiag.canvas.on("object:moving", function(e){
+        if(e.target === currentlyEditedBubble && textInput) {
+            updateInputPosition();
         }
-
-        if (textInput) {
-            diagramContainer.removeChild(textInput);
-            textInput = null;
-        }
-
-        currentlyEditedBubble = target;
-        if (currentlyEditedBubble) {
-            currentlyEditedBubble.isInEditMode = true;
-            createCanvasInputForEditedBubble();
-        }
-    };
+    });
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.CanvasInput);
