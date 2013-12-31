@@ -1,6 +1,15 @@
 (function(window, fabric, codiag, _, undefined) {
     "use strict";
 
+    var defaults = {
+        stroke: "red",
+        fill: "red",
+        originX: "center",
+        originY: "center",
+        strokeWidth: 5,
+        selectable: false
+    };
+
     codiag.getLineCoords = function(from, to, format) {
         var fromCenter = from && from.shape ? from.shape.getCenterPoint() : {
             x: null,
@@ -24,15 +33,6 @@
         ];
 
         return result;
-    };
-
-    var defaults = {
-        stroke: "red",
-        fill: "red",
-        originX: "center",
-        originY: "center",
-        strokeWidth: 5,
-        selectable: false
     };
 
     codiag.Connection = function(options) {

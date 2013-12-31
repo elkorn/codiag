@@ -1,8 +1,8 @@
-'use strict';
+"use strict";
 
-angular.module('codiagApp')
-  .controller('MainCtrl', function ($scope, $http) {
-    $http.get('/api/awesomeThings').success(function(awesomeThings) {
+angular.module("codiagApp")
+  .controller("MainCtrl", function ($scope, $http) {
+    $http.get("/api/awesomeThings").success(function(awesomeThings) {
       $scope.awesomeThings = awesomeThings;
     });
   });

@@ -1,11 +1,6 @@
-(function(window, fabric, codiag, _, $, undefined) {
+(function(window, fabric, codiag, $, undefined) {
     "use strict";
 
-    var buttons = {
-        ADD_STANDALONE: document.getElementById("addStandalone"),
-        ADD_CHILD: document.getElementById("addChild"),
-        REMOVE: document.getElementById("delete")
-    };
 
     function enable(elem) {
         elem.disabled = undefined;
@@ -15,23 +10,31 @@
         elem.disabled = "true";
     }
 
-    codiag.canvas.on("selection:cleared", function() {
-        disable(buttons.ADD_CHILD);
-        disable(buttons.REMOVE);
-    });
+    codiag.initializeDiagramMenu = function() {
+        var buttons = {
+            ADD_STANDALONE: document.getElementById("addStandalone"),
+            ADD_CHILD: document.getElementById("addChild"),
+            REMOVE: document.getElementById("delete")
+        };
 
-    codiag.canvas.on("object:selected", function() {
-        enable(buttons.ADD_CHILD);
-        enable(buttons.REMOVE);
-    });
+        codiag.canvas.on("selection:cleared", function() {
+            disable(buttons.ADD_CHILD);
+            disable(buttons.REMOVE);
+        });
 
-    function hideCreationPopovers() {
-        $([buttons.ADD_STANDALONE, buttons.ADD_CHILD]).popover("hide");
-    }
+        codiag.canvas.on("object:selected", function() {
+            enable(buttons.ADD_CHILD);
+            enable(buttons.REMOVE);
+        });
 
-    codiag.canvas.on("mode:creation:disabled", hideCreationPopovers);
+        function hideCreationPopovers() {
+            $([buttons.ADD_STANDALONE, buttons.ADD_CHILD]).popover("hide");
+        }
 
-    $(buttons.ADD_STANDALONE).on("click", codiag.toggleCreationMode.bind(codiag));
-    $(buttons.REMOVE).on("click", codiag.removeCurrentBubble.bind(codiag));
+        codiag.canvas.on("mode:creation:disabled", hideCreationPopovers);
 
-})(window, window.fabric, window.codiag || (window.codiag = {}), window._, window.jQuery);
+        $(buttons.ADD_STANDALONE).on("click", codiag.toggleCreationMode.bind(codiag));
+        $(buttons.REMOVE).on("click", codiag.removeCurrentBubble.bind(codiag));
+    };
+
+})(window, window.fabric, window.codiag || (window.codiag = {}), window.jQuery);

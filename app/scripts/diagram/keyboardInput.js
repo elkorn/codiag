@@ -16,42 +16,50 @@
         "DELETE_BUBBLE": "del"
     };
 
-    Mousetrap.bind("space", function() {
-        var activeObject = codiag.canvas.getActiveObject(),
-            result;
+    codiag.enableDiagramHotkeys = function() {
+        Mousetrap.bind("space", function() {
+            var activeObject = codiag.canvas.getActiveObject(),
+                result;
 
-        if (activeObject) {
-            result = !! activeObject.isInEditMode;
-            if (!result) {
-                codiag.canvas.fire("object:enableEditMode", {
-                    target: activeObject
-                });
+            if (activeObject) {
+                result = !! activeObject.isInEditMode;
+                if (!result) {
+                    codiag.canvas.fire("object:enableEditMode", {
+                        target: activeObject
+                    });
+                }
+
+            } else {
+                result = false;
             }
 
-        } else {
-            result = false;
-        }
+            return result;
+        });
 
-        return result;
-    });
+        Mousetrap.bind(hotkeys.ADD_BUBBLE, function() {
+            var activeObject = codiag.canvas.getActiveObject();
+            if ((activeObject && !activeObject.isInEditMode) || !activeObject) {
+                codiag.createBubble();
+                return false;
+            }
+        });
 
-    Mousetrap.bind(hotkeys.ADD_BUBBLE, function() {
-        var activeObject = codiag.canvas.getActiveObject();
-        if ((activeObject && !activeObject.isInEditMode) || !activeObject) {
-            codiag.createBubble();
-            return false;
-        }
-    });
+        Mousetrap.bind(hotkeys.ADD_CHILD_BUBBLE, function() {
+            var activeObject = codiag.canvas.getActiveObject();
+            if (activeObject) {
+                codiag.createChildBubble();
+                return false;
+            }
+        });
 
-    Mousetrap.bind(hotkeys.ADD_CHILD_BUBBLE, function() {
-        var activeObject = codiag.canvas.getActiveObject();
-        if (activeObject) {
-            codiag.createChildBubble();
-            return false;
-        }
-    });
+        Mousetrap.bind(hotkeys.CANCEL, codiag.cancelEditing.bind(codiag));
+        Mousetrap.bind(hotkeys.DELETE_BUBBLE, codiag.removeCurrentBubble.bind(codiag));
+    };
 
-    Mousetrap.bind(hotkeys.CANCEL, codiag.cancelEditing.bind(codiag));
-    Mousetrap.bind(hotkeys.DELETE_BUBBLE, codiag.removeCurrentBubble.bind(codiag));
+    codiag.disableDiagramHotkeys = function() {
+        Object.keys(hotkeys).forEach(function(key){
+            Mousetrap.unbind(hotkeys[key]);
+        });
+    };
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.Mousetrap);

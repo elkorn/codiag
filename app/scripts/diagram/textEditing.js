@@ -84,30 +84,32 @@
         return !!currentlyEditedBubble;
     };
 
-    codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
-        console.log("object:enableEditMode");
-        codiag.changeEditedBubble(e.target);
-    });
+    codiag.initializeTextEditing = function() {
+        codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
+            console.log("object:enableEditMode");
+            codiag.changeEditedBubble(e.target);
+        });
 
-    codiag.canvas.on("selection:cleared", function clearEditMode() {
-        console.log("selection:cleared");
-        codiag.changeEditedBubble(null);
-    });
+        codiag.canvas.on("selection:cleared", function clearEditMode() {
+            console.log("selection:cleared");
+            codiag.changeEditedBubble(null);
+        });
 
-    codiag.canvas.on("object:selected", function(e) {
-        if (currentlyEditedBubble) {
-            console.log("object:selected");
-            var selectingCurrentBubble = e.target === currentlyEditedBubble;
-            if (!selectingCurrentBubble) {
-                codiag.changeEditedBubble(null);
+        codiag.canvas.on("object:selected", function(e) {
+            if (currentlyEditedBubble) {
+                console.log("object:selected");
+                var selectingCurrentBubble = e.target === currentlyEditedBubble;
+                if (!selectingCurrentBubble) {
+                    codiag.changeEditedBubble(null);
+                }
             }
-        }
-    });
+        });
 
-    codiag.canvas.on("object:moving", function(e) {
-        if (e.target === currentlyEditedBubble && textInput) {
-            updateInputPosition();
-        }
-    });
+        codiag.canvas.on("object:moving", function(e) {
+            if (e.target === currentlyEditedBubble && textInput) {
+                updateInputPosition();
+            }
+        });
+    };
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.CanvasInput);

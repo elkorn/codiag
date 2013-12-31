@@ -1,18 +1,18 @@
-'use strict';
+"use strict";
 
-angular.module('codiagApp')
-  .controller('NavbarCtrl', function ($scope, $location) {
+angular.module("codiagApp")
+  .controller("NavbarCtrl", function ($scope, $location) {
     $scope.menu = [{
-      'title': 'Home',
-      'link': '/'
+      "title": "Home",
+      "link": "/"
     },
     {
-      'title': 'About',
-      'link': '#'
+      "title": "About",
+      "link": "#"
     },
     {
-      'title': 'Contact',
-      'link': '#'
+      "title": "Contact",
+      "link": "#"
     }];
 
     $scope.isActive = function(route) {

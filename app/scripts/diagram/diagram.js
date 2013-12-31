@@ -39,15 +39,14 @@
         return result;
     };
 
-    canvas.setWidth(1920);
-    canvas.setHeight(1080);
-
-    codiag.canvas = canvas;
-
     codiag.initializeDiagram = function() {
         canvas = new fabric.Canvas("c", {
             selection: false
         });
+
+        canvas.setWidth(1920);
+        canvas.setHeight(1080);
+        codiag.canvas = canvas;
     };
 
     codiag.createBubble = function(shapeOptions, connections) {

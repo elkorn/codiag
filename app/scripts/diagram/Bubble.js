@@ -1,4 +1,4 @@
-(function(window, fabric, codiag, _, undefined) {
+(function(window, fabric, codiag, undefined) {
     "use strict";
 
     function createBubbleObject(shapeOptions) {
@@ -109,4 +109,4 @@
             this.connections.input.forEach(updateInputConnectionCoords.bind(this, this));
         }
     };
-})(window, window.fabric, window.codiag || (window.codiag = {}), window._);
+})(window, window.fabric, window.codiag || (window.codiag = {}));
