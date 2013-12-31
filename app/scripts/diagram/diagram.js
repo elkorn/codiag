@@ -8,9 +8,23 @@
     var connections = {};
     var isInCreationMode = false;
 
-    var canvas = new fabric.Canvas("c", {
-        selection: false
-    });
+    var canvas;
+
+    function createBubbleOnDemand() {
+        var coords = codiag.input.getMousePosition();
+        disableCreationMode();
+        codiag.createBubble({
+            left: coords.x,
+            top: coords.y
+        });
+    }
+
+    function disableCreationMode() {
+        codiag.canvas.off("mouse:down", createBubbleOnDemand);
+        isInCreationMode = false;
+        codiag.canvas.fire("mode:creation:disabled");
+    }
+
 
     codiag.style = {
         bubblePadding: 20,
@@ -29,6 +43,12 @@
     canvas.setHeight(1080);
 
     codiag.canvas = canvas;
+
+    codiag.initializeDiagram = function() {
+        canvas = new fabric.Canvas("c", {
+            selection: false
+        });
+    };
 
     codiag.createBubble = function(shapeOptions, connections) {
         var options = fabric.util.object.extend({}, shapeOptions);
@@ -118,21 +138,6 @@
             codiag.removeBubble(canvas.getActiveObject());
         }
     };
-
-    function createBubbleOnDemand() {
-        var coords = codiag.input.getMousePosition();
-        disableCreationMode();
-        codiag.createBubble({
-            left: coords.x,
-            top: coords.y
-        });
-    }
-
-    function disableCreationMode() {
-        codiag.canvas.off("mouse:down", createBubbleOnDemand);
-        isInCreationMode = false;
-        codiag.canvas.fire("mode:creation:disabled");
-    }
 
     codiag.toggleCreationMode = function() {
         if (isInCreationMode) {
