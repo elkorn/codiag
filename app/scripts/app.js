@@ -2,9 +2,10 @@
 
 angular.module("codiagApp", [
   "ngResource",
-  "ngRoute"
+  "ngRoute",
+  "btford.socket-io"
 ])
-  .config(function ($routeProvider, $locationProvider) {
+  .config(function($routeProvider, $locationProvider) {
     $routeProvider
       .when("/", {
         templateUrl: "partials/main",

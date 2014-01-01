@@ -12,8 +12,9 @@
     .diagram-container {
         position:relative;
         top: 42px;
-        // border: 1px solid $navbar-default-border;
-        // border-top: none;
-        // height: 100%;
+    }
+
+    .navbar-brand {
+        line-height: 31px;
     }
 }
