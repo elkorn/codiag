@@ -35,6 +35,10 @@
 
         $(buttons.ADD_STANDALONE).on("click", codiag.toggleCreationMode.bind(codiag));
         $(buttons.REMOVE).on("click", codiag.removeCurrentBubble.bind(codiag));
+
+        $("[data-toggle*='popover']").popover();
+        $("[data-toggle*='tooltip']").tooltip();
+        $("[data-toggle*='button']").button();
     };
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.jQuery);

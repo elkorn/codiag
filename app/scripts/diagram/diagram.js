@@ -25,7 +25,6 @@
         codiag.canvas.fire("mode:creation:disabled");
     }
 
-
     codiag.style = {
         bubblePadding: 20,
         font: "sans-serif",
@@ -40,12 +39,12 @@
     };
 
     codiag.initializeDiagram = function() {
-        canvas = new fabric.Canvas("c", {
+        canvas = new fabric.Canvas("canvas", {
             selection: false
         });
 
-        canvas.setWidth(1920);
-        canvas.setHeight(1080);
+        canvas.setWidth(2000);
+        canvas.setHeight(2000);
         codiag.canvas = canvas;
     };
 

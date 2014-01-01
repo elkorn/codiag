@@ -1,3 +1,17 @@
+"use strict";
+
+angular.module("codiagApp")
+  .directive("diagram", function () {
+    return {
+      templateUrl: "<div class=\"diagram-container\"><canvas id=\"canvas\" class=\"diagram\"></canvas></div>",
+      restrict: "E",
+      link: function postLink(scope, element, attrs) {
+        element.text("this is the diagram directive");
+      }
+    };
+  });
+
+
 (function(window, fabric, codiag, $, undefined) {
     "use strict";
 

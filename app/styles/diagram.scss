@@ -1,11 +1,19 @@
-.menu {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-}
+@import "../bower_components/sass-bootstrap/lib/variables";
 
-.diagram-container {
-    position:relative;
+.diagram-room {
+    .menu {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    .diagram-container {
+        position:relative;
+        top: 42px;
+        // border: 1px solid $navbar-default-border;
+        // border-top: none;
+        // height: 100%;
+    }
 }
