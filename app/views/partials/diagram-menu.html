@@ -1,0 +1,44 @@
+<nav id="diagram-nav" class="navbar navbar-default menu">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#diagram-navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">{{room.name}}</a>
+    </div>
+    <div class="collapse navbar-collapse" id="diagram-navbar-collapse">
+        <button type="button"
+                    id="addStandalone"
+                    class="btn btn-default navbar-btn btn-lg"
+                    data-toggle="tooltip popover button"
+                    data-placement="bottom"
+                    title=""
+                    data-content="Click on the canvas to place the new bubble."
+                    data-original-title="Add standalone bubble (ENTER)">
+            <span class="glyphicon glyphicon-asterisk"></span>
+        </button>
+        <button type="button"
+                    id="addChild"
+                    disabled="true"
+                    class="btn btn-default navbar-btn btn-lg"
+                    data-toggle="tooltip popover button"
+                    data-placement="bottom"
+                    title=""
+                    data-content="Click on the canvas to place the new bubble."
+                    data-original-title="Add child bubble (INSERT)">
+            <span class="glyphicon glyphicon-plus-sign"></span>
+        </button>
+        <button type="button"
+                    id="delete"
+                    disabled="true"
+                    class="btn btn-default navbar-btn btn-lg"
+                    data-toggle="tooltip"
+                    data-placement="bottom"
+                    title=""
+                    data-original-title="Remove selected bubble (DELETE)">
+            <span class="glyphicon glyphicon-remove-sign"></span>
+        </button>
+    </div>
+</nav>

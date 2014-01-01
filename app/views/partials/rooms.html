@@ -1,0 +1,9 @@
+<p>This is the rooms view.</p>
+<ul>
+    <li data-ng-repeat="room in rooms">
+        <a  data-ng-click="selectRoom(room)"
+            data-ng-href="#/rooms/{{room.id}}">
+            {{room.name}}
+        </a>
+    </li>
+</ul>
