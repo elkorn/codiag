@@ -15,7 +15,7 @@ angular.module("codiagApp", [
         controller: "RoomsCtrl"
       })
       .when("/rooms/:roomId", {
-        templateUrl: "partials/diagram",
+        templateUrl: "partials/diagram-room",
         controller: "DiagramCtrl"
       })
       .otherwise({

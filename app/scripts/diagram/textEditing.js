@@ -3,7 +3,7 @@
 
     var currentlyEditedBubble;
     var textInput;
-    var diagramContainer = document.querySelector(".diagram-container");
+    var diagramContainer;
 
     function applyTextChangesToEditedBubble() {
         currentlyEditedBubble.setText(textInput.value);
@@ -85,6 +85,7 @@
     };
 
     codiag.initializeTextEditing = function() {
+         diagramContainer = document.querySelector(".diagram-container");
         codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
             console.log("object:enableEditMode");
             codiag.changeEditedBubble(e.target);
@@ -103,12 +104,25 @@
                     codiag.changeEditedBubble(null);
                 }
             }
+
         });
 
         codiag.canvas.on("object:moving", function(e) {
             if (e.target === currentlyEditedBubble && textInput) {
                 updateInputPosition();
             }
+        });
+
+        codiag.canvas.on("selection:cleared", function(){
+            console.log("selection:cleared");
+        });
+
+        codiag.canvas.on("before:selection:cleared", function(){
+            console.log("before:selection:cleared");
+        });
+
+        codiag.canvas.on("selection:created", function(){
+            console.log("selection:created");
         });
     };
 

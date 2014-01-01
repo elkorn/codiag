@@ -1,6 +1,7 @@
 (function(window, fabric, codiag, $, undefined) {
     "use strict";
 
+    var buttons;
 
     function enable(elem) {
         elem.disabled = undefined;
@@ -11,7 +12,7 @@
     }
 
     codiag.initializeDiagramMenu = function() {
-        var buttons = {
+        buttons = {
             ADD_STANDALONE: document.getElementById("addStandalone"),
             ADD_CHILD: document.getElementById("addChild"),
             REMOVE: document.getElementById("delete")
