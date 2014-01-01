@@ -3,24 +3,38 @@
 
     var buttons;
 
-    function enable(elem) {
-        elem.disabled = undefined;
+    function enable(id) {
+        document.getElementById(id).disabled = undefined;
     }
 
-    function disable(elem) {
-        elem.disabled = "true";
+    function disable(id) {
+        document.getElementById(id).disabled = "true";
+    }
+
+    function asId(elem) {
+        if(Array.isArray(elem)) {
+            return elem.map(asId);
+        } else {
+            if(typeof(elem) === "string") {
+                return "#" + elem;
+            } else {
+                throw new TypeError("string required.");
+            }
+        }
     }
 
     codiag.initializeDiagramMenu = function() {
         buttons = {
-            ADD_STANDALONE: document.getElementById("addStandalone"),
-            ADD_CHILD: document.getElementById("addChild"),
-            REMOVE: document.getElementById("delete")
+            ADD_STANDALONE: "addStandalone",
+            ADD_CHILD: "addChild",
+            REMOVE: "delete"
         };
 
         codiag.canvas.on("selection:cleared", function() {
             disable(buttons.ADD_CHILD);
             disable(buttons.REMOVE);
+
+            $(asId(buttons.ADD_CHILD)).popover("hide");
         });
 
         codiag.canvas.on("object:selected", function() {
@@ -29,13 +43,14 @@
         });
 
         function hideCreationPopovers() {
-            $([buttons.ADD_STANDALONE, buttons.ADD_CHILD]).popover("hide");
+            $(asId([buttons.ADD_STANDALONE, buttons.ADD_CHILD])).popover("hide");
         }
 
         codiag.canvas.on("mode:creation:disabled", hideCreationPopovers);
 
-        $(buttons.ADD_STANDALONE).on("click", codiag.toggleCreationMode.bind(codiag));
-        $(buttons.REMOVE).on("click", codiag.removeCurrentBubble.bind(codiag));
+        $(asId(buttons.ADD_STANDALONE)).on("click", codiag.toggleStandaloneCreationMode.bind(codiag));
+        $(asId(buttons.ADD_CHILD)).on("click", codiag.toggleChildCreationMode.bind(codiag));
+        $(asId(buttons.REMOVE)).on("click", codiag.removeCurrentBubble.bind(codiag));
 
         $("[data-toggle*='popover']").popover();
         $("[data-toggle*='tooltip']").tooltip();

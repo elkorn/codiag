@@ -8,7 +8,9 @@
                 replace: true,
                 restrict: "A",
                 link: function postLink(scope, element, attrs) {
-                    codiag.initializeDiagramMenu();
+                    scope.$on("codiag:diagram:initialized", function() {
+                        codiag.initializeDiagramMenu();
+                    });
                 }
             };
         });

@@ -13,15 +13,17 @@
                     codiag.input.startTrackingMouse();
                     codiag.initializeTextEditing();
 
+                    scope.$emit("codiag:diagram:initialized");
+
                     var canvas = codiag.canvas;
-                    var x = codiag.createBubble({
+                    var x = codiag.createStandaloneBubble({
                         text: "lorem ipsum dolor sit amet\nthis is a multiline text\nit should be centered",
                         left: 10,
                         top: 100,
                         canvas: canvas
                     });
 
-                    var y = codiag.createBubble({
+                    var y = codiag.createStandaloneBubble({
                         text: "the second element\nwith multiline text",
                         left: 300,
                         top: 400,

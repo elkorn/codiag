@@ -3,26 +3,44 @@
     /*
         https://github.com/kangax/fabric.js/wiki/Working-with-events
      */
-    // var currentlyEditedBubble;
+    var currentParentBubble;
     var bubbles = {};
     var connections = {};
     var isInCreationMode = false;
 
     var canvas;
 
-    function createBubbleOnDemand() {
+    function disableCreationMode(creationMode) {
+        codiag.canvas.off("mouse:up", creationMode);
+        isInCreationMode = false;
+        codiag.canvas.fire("mode:creation:disabled");
+    }
+
+    function handleCreationModeSwitching(creationMode) {
+        if (isInCreationMode) {
+            disableCreationMode(creationMode);
+        } else {
+            isInCreationMode = true;
+            codiag.canvas.on("mouse:up", creationMode);
+        }
+    }
+
+    function createStandaloneBubbleOnDemand() {
         var coords = codiag.input.getMousePosition();
-        disableCreationMode();
-        codiag.createBubble({
+        disableCreationMode(createStandaloneBubbleOnDemand);
+        codiag.createStandaloneBubble({
             left: coords.x,
             top: coords.y
         });
     }
 
-    function disableCreationMode() {
-        codiag.canvas.off("mouse:down", createBubbleOnDemand);
-        isInCreationMode = false;
-        codiag.canvas.fire("mode:creation:disabled");
+    function createChildBubbleOnDemand() {
+        var coords = codiag.input.getMousePosition();
+        disableCreationMode(createChildBubbleOnDemand);
+        codiag.createChildBubble({
+            left: coords.x,
+            top: coords.y
+        });
     }
 
     codiag.style = {
@@ -46,9 +64,13 @@
         canvas.setWidth(2000);
         canvas.setHeight(2000);
         codiag.canvas = canvas;
+
+        canvas.on("object:selected", function() {
+            currentParentBubble = canvas.getActiveObject();
+        });
     };
 
-    codiag.createBubble = function(shapeOptions, connections) {
+    codiag.createStandaloneBubble = function(shapeOptions, connections) {
         var options = fabric.util.object.extend({}, shapeOptions);
         var shouldBeEditableImmediately = !options.hasOwnProperty("text");
         if (!(options.hasOwnProperty("left") || options.hasOwnProperty("top"))) {
@@ -66,6 +88,7 @@
         var result = new codiag.Bubble(options, connections);
         var id = codiag.util.uuid();
         result.id = result.shape.id = id;
+
         bubbles[id] = result;
         if (shouldBeEditableImmediately) {
             codiag.canvas.setActiveObject(result.shape);
@@ -80,13 +103,16 @@
     };
 
     codiag.createChildBubble = function(shapeOptions, connections) {
-        var parent = codiag.getBubble(codiag.canvas.getActiveObject().id);
+        var parent = codiag.getBubble(currentParentBubble.id);
         if (parent) {
-            var child = codiag.createBubble(shapeOptions, connections);
+            var child = codiag.createStandaloneBubble(shapeOptions, connections);
             codiag.createConnection({
                 from: parent,
                 to: child
             });
+
+            currentParentBubble = child.shape;
+            canvas.setActiveObject(child.shape);
         }
     };
 
@@ -137,13 +163,12 @@
         }
     };
 
-    codiag.toggleCreationMode = function() {
-        if (isInCreationMode) {
-            disableCreationMode();
-        } else {
-            isInCreationMode = true;
-            codiag.canvas.on("mouse:down", createBubbleOnDemand);
-        }
+    codiag.toggleStandaloneCreationMode = function() {
+        handleCreationModeSwitching(createStandaloneBubbleOnDemand);
+    };
+
+    codiag.toggleChildCreationMode = function() {
+        handleCreationModeSwitching(createChildBubbleOnDemand);
     };
 
 })(window, window.fabric, (window.codiag || (window.codiag = {})));

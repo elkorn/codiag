@@ -19,6 +19,7 @@
     }
 
     function createCanvasInputForEditedBubble() {
+        console.log("creating");
         textInput = document.createElement("textarea");
         textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - codiag.style.bubblePadding);
         textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - codiag.style.bubblePadding);
@@ -34,11 +35,12 @@
     function setCaretPosition(elem, caretPos) {
         if (elem !== null) {
             if (elem.hasOwnProperty("createTextRange")) {
+                console.log("focusing - range");
                 var range = elem.createTextRange();
                 range.move("character", caretPos);
                 range.select();
             } else {
-                console.log("focusing");
+                console.log("focusing - selectionstart");
                 if (elem.hasOwnProperty("selectionStart")) {
                     elem.focus();
                     elem.setSelectionRange(caretPos, caretPos);
@@ -85,7 +87,7 @@
     };
 
     codiag.initializeTextEditing = function() {
-         diagramContainer = document.querySelector(".diagram-container");
+        diagramContainer = document.querySelector(".diagram-container");
         codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
             console.log("object:enableEditMode");
             codiag.changeEditedBubble(e.target);
@@ -102,6 +104,9 @@
                 var selectingCurrentBubble = e.target === currentlyEditedBubble;
                 if (!selectingCurrentBubble) {
                     codiag.changeEditedBubble(null);
+                } else {
+                    console.log(textInput.selectionStart);
+                    setCaretPosition(textInput, textInput.selectionStart);
                 }
             }
 
@@ -113,15 +118,15 @@
             }
         });
 
-        codiag.canvas.on("selection:cleared", function(){
+        codiag.canvas.on("selection:cleared", function() {
             console.log("selection:cleared");
         });
 
-        codiag.canvas.on("before:selection:cleared", function(){
+        codiag.canvas.on("before:selection:cleared", function() {
             console.log("before:selection:cleared");
         });
 
-        codiag.canvas.on("selection:created", function(){
+        codiag.canvas.on("selection:created", function() {
             console.log("selection:created");
         });
     };
