@@ -66,6 +66,9 @@
         if (textInput) {
             diagramContainer.removeChild(textInput);
             textInput = null;
+            if (target === null) {
+                codiag.disableCreationMode();
+            }
         }
 
         currentlyEditedBubble = target;
@@ -80,6 +83,8 @@
             textInput.value = currentlyEditedBubble.getText();
             codiag.changeEditedBubble(null);
         }
+
+        codiag.disableCreationMode();
     };
 
     codiag.isEditingABubble = function() {
@@ -104,6 +109,7 @@
                 var selectingCurrentBubble = e.target === currentlyEditedBubble;
                 if (!selectingCurrentBubble) {
                     codiag.changeEditedBubble(null);
+                    codiag.disableCreationMode();
                 } else {
                     console.log(textInput.selectionStart);
                     setCaretPosition(textInput, textInput.selectionStart);
@@ -116,18 +122,6 @@
             if (e.target === currentlyEditedBubble && textInput) {
                 updateInputPosition();
             }
-        });
-
-        codiag.canvas.on("selection:cleared", function() {
-            console.log("selection:cleared");
-        });
-
-        codiag.canvas.on("before:selection:cleared", function() {
-            console.log("before:selection:cleared");
-        });
-
-        codiag.canvas.on("selection:created", function() {
-            console.log("selection:created");
         });
     };
 

@@ -12,8 +12,9 @@
     var hotkeys = {
         "ADD_BUBBLE": "enter",
         "ADD_CHILD_BUBBLE": "ins",
-        "CANCEL": "escape",
-        "DELETE_BUBBLE": "del"
+        "CANCEL": "esc",
+        "DELETE_BUBBLE": "del",
+        "CONNECT": "c"
     };
 
     codiag.enableDiagramHotkeys = function() {
@@ -39,6 +40,7 @@
         Mousetrap.bind(hotkeys.ADD_BUBBLE, function() {
             var activeObject = codiag.canvas.getActiveObject();
             if ((activeObject && !activeObject.isInEditMode) || !activeObject) {
+                codiag.enableCreationMode();
                 codiag.createStandaloneBubble();
                 return false;
             }
@@ -47,6 +49,7 @@
         Mousetrap.bind(hotkeys.ADD_CHILD_BUBBLE, function() {
             var activeObject = codiag.canvas.getActiveObject();
             if (activeObject) {
+                codiag.enableCreationMode();
                 codiag.createChildBubble();
                 return false;
             }
@@ -54,6 +57,7 @@
 
         Mousetrap.bind(hotkeys.CANCEL, codiag.cancelEditing.bind(codiag));
         Mousetrap.bind(hotkeys.DELETE_BUBBLE, codiag.removeCurrentBubble.bind(codiag));
+        Mousetrap.bind(hotkeys.CONNECT, codiag.toggleConnectionMode.bind(codiag));
     };
 
     codiag.disableDiagramHotkeys = function() {

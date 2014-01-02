@@ -4,30 +4,46 @@
         https://github.com/kangax/fabric.js/wiki/Working-with-events
      */
     var currentParentBubble;
+    var connectionOrigin;
     var bubbles = {};
     var connections = {};
     var isInCreationMode = false;
 
     var canvas;
 
-    function disableCreationMode(creationMode) {
-        codiag.canvas.off("mouse:up", creationMode);
+    function disableCreationMode() {
+        console.log("Leaving creation mode.");
+        codiag.canvas.off("mouse:up", createStandaloneBubbleOnDemand);
+        codiag.canvas.off("mouse:up", createChildBubbleOnDemand);
+        codiag.canvas.off("object:selected", createConnectionOnDemand);
+        connectionOrigin = null;
         isInCreationMode = false;
         codiag.canvas.fire("mode:creation:disabled");
     }
 
+    function enableCreationMode() {
+        if (!isInCreationMode) {
+            console.log("Entering creation mode.");
+            isInCreationMode = true;
+            codiag.canvas.fire("mode:creation:enabled");
+        }
+    }
+
+    codiag.enableCreationMode = enableCreationMode;
+    codiag.disableCreationMode = disableCreationMode;
+
     function handleCreationModeSwitching(creationMode) {
         if (isInCreationMode) {
-            disableCreationMode(creationMode);
+            codiag.disableCreationMode();
         } else {
-            isInCreationMode = true;
+            enableCreationMode();
             codiag.canvas.on("mouse:up", creationMode);
         }
     }
 
     function createStandaloneBubbleOnDemand() {
         var coords = codiag.input.getMousePosition();
-        disableCreationMode(createStandaloneBubbleOnDemand);
+        disableCreationMode();
         codiag.createStandaloneBubble({
             left: coords.x,
             top: coords.y
@@ -36,11 +52,30 @@
 
     function createChildBubbleOnDemand() {
         var coords = codiag.input.getMousePosition();
-        disableCreationMode(createChildBubbleOnDemand);
+        disableCreationMode();
         codiag.createChildBubble({
             left: coords.x,
             top: coords.y
         });
+    }
+
+    function createConnectionOnDemand(event) {
+        var target = codiag.getBubble(event.target.id);
+        var connectionAlreadyExists = Object.keys(connections).some(function(key) {
+            var connection = connections[key];
+            return (connection.from === connectionOrigin && connection.to === target) ||
+                (connection.to === connectionOrigin && connection.from === target);
+        });
+
+        if (!connectionAlreadyExists) {
+            console.log("No previous connection, creating.");
+            codiag.createConnection({
+                from: connectionOrigin,
+                to: target
+            });
+        }
+
+        codiag.disableCreationMode();
     }
 
     codiag.style = {
@@ -169,6 +204,18 @@
 
     codiag.toggleChildCreationMode = function() {
         handleCreationModeSwitching(createChildBubbleOnDemand);
+    };
+
+    codiag.toggleConnectionMode = function() {
+        if (!isInCreationMode) {
+            var activeObject = codiag.canvas.getActiveObject();
+            if (activeObject) {
+                enableCreationMode();
+                codiag.canvas.fire("mode:connection:enabled");
+                connectionOrigin = codiag.getBubble(activeObject.id);
+                codiag.canvas.on("object:selected", createConnectionOnDemand);
+            }
+        }
     };
 
 })(window, window.fabric, (window.codiag || (window.codiag = {})));
