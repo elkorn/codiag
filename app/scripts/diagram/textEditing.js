@@ -35,12 +35,10 @@
     function setCaretPosition(elem, caretPos) {
         if (elem !== null) {
             if (elem.hasOwnProperty("createTextRange")) {
-                console.log("focusing - range");
                 var range = elem.createTextRange();
                 range.move("character", caretPos);
                 range.select();
             } else {
-                console.log("focusing - selectionstart");
                 if (elem.hasOwnProperty("selectionStart")) {
                     elem.focus();
                     elem.setSelectionRange(caretPos, caretPos);

@@ -190,6 +190,7 @@
         toRemove.connections.output.forEach(removeConnection);
         delete bubbles[bubble.id];
         canvas.remove(bubble);
+        disableCreationMode();
     };
 
     codiag.removeCurrentBubble = function() {
