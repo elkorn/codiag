@@ -70,6 +70,8 @@
 
         currentlyEditedBubble = target;
         if (currentlyEditedBubble) {
+            codiag.disableCreationMode();
+            codiag.enableCreationMode();
             currentlyEditedBubble.isInEditMode = true;
             createCanvasInputForEditedBubble();
         }
