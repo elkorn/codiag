@@ -68,7 +68,6 @@
         });
 
         if (!connectionAlreadyExists) {
-            console.log("No previous connection, creating.");
             codiag.createConnection({
                 from: connectionOrigin,
                 to: target

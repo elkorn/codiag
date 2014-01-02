@@ -19,7 +19,6 @@
     }
 
     function createCanvasInputForEditedBubble() {
-        console.log("creating");
         textInput = document.createElement("textarea");
         textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - codiag.style.bubblePadding);
         textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - codiag.style.bubblePadding);
