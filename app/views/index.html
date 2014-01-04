@@ -55,24 +55,29 @@
     <script src="bower_components/mousetrap/mousetrap.js"></script>
     <script src="bower_components/fabric/dist/all.js"></script>
     <script src="bower_components/angular-socket-io/socket.js"></script>
+    <script src="bower_components/firebase/lib/firebase.js"></script>
+    <script src="bower_components/angular-mocks/angular-mocks.js"></script>
+    <script src="bower_components/angularfire/angularfire.js"></script>
+    <script src="bower_components/angularfire/angularfire.min.js"></script>
     <!-- endbower -->
     <!-- endbuild -->
 
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/diagram/util.js"></script>
+    <script src="scripts/diagram/diagram.js"></script>
+    <script src="scripts/diagram/mouseTracker.js"></script>
+    <script src="scripts/diagram/Bubble.js"></script>
+    <script src="scripts/diagram/Connection.js"></script>
+    
+    <script src="scripts/utils/Math.uuid.js"></script>
+    <script src="scripts/utils/common.js"></script>
+
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/main.js"></script>
     <script src="scripts/controllers/navbar.js"></script>
     <script src="scripts/controllers/rooms.js"></script>
     <script src="scripts/controllers/diagram.js"></script>
 
-    <script src="scripts/diagram/util.js"></script>
-    <script src="scripts/diagram/diagram.js"></script>
-    <script src="scripts/diagram/mouseTracker.js"></script>
-    <script src="scripts/diagram/Bubble.js"></script>
-    <script src="scripts/diagram/Connection.js"></script>
-
-    <script src="scripts/utils/Math.uuid.js"></script>
-    
     <script src="scripts/diagram/menu.js"></script>
     <script src="scripts/diagram/textEditing.js"></script>
     <script src="scripts/diagram/keyboardInput.js"></script>
@@ -82,6 +87,7 @@
     <script src="scripts/services/roomSocket.js"></script>
 
     <script src="socket.io/socket.io.js"></script>
+    <script src="scripts/services/diagram.js"></script>
     <!-- endbuild -->
 </body>
 </html>

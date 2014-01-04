@@ -2,7 +2,7 @@
 <ul>
     <li data-ng-repeat="room in rooms">
         <a  data-ng-click="selectRoom(room)"
-            data-ng-href="#/rooms/{{room.id}}">
+            data-ng-href="#/rooms/{{getRoomIndex($index)}}">
             {{room.name}}
         </a>
     </li>

@@ -2,22 +2,10 @@
     "use strict";
 
     angular.module("codiagApp")
-        .controller("DiagramCtrl", function($scope, $routeParams, RoomsService, roomSocket) {
+        .controller("DiagramCtrl", function($scope, $routeParams, DiagramService) {
             var currentRoomId = $routeParams.roomId;
-            var socket = roomSocket.getSocketForRoom(currentRoomId);
-            socket.forward("info", $scope);
 
-            $scope.$on("socket:info", function(){
-                /*
-                    Beget unicorns.
-                 */
-            });
-
-            RoomsService.query(function(data) {
-                $scope.room = window.codiag.util.findFirst(data)(function(room) {
-                    return room.id === currentRoomId;
-                });
-            });
+            $scope.room = DiagramService.getDiagram(currentRoomId);
 
         });
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.jQuery);
