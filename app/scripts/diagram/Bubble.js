@@ -102,6 +102,16 @@
             this.updateInputConnections();
             this.updateOutputConnections();
         },
+        serialize: function() {
+            return {
+                id: this.id,
+                text: this.getText(),
+                coords: {
+                    left: this.shape.getLeft(),
+                    top: this.shape.getTop()
+                }
+            };
+        },
         updateOutputConnections: function() {
             this.connections.output.forEach(updateOutputConnectionCoords.bind(this, this));
         },

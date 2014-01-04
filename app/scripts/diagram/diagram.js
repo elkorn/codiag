@@ -29,9 +29,6 @@
         }
     }
 
-    codiag.enableCreationMode = enableCreationMode;
-    codiag.disableCreationMode = disableCreationMode;
-
     function handleCreationModeSwitching(creationMode) {
         if (isInCreationMode) {
             codiag.disableCreationMode();
@@ -88,6 +85,16 @@
         var existingUuids = Object.keys(bubbles).concat(Object.keys(connections));
         while (existingUuids.indexOf((result = Math.uuid())) !== -1) {}
         return result;
+    };
+
+    codiag.enableCreationMode = enableCreationMode;
+    codiag.disableCreationMode = disableCreationMode;
+
+    codiag.serialize = function() {
+        return codiag._serializer.serialize({
+            bubbles: bubbles,
+            connections: connections
+        });
     };
 
     codiag.initializeDiagram = function() {

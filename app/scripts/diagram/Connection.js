@@ -1,4 +1,4 @@
-(function(window, fabric, codiag, _, undefined) {
+(function(window, fabric, codiag, undefined) {
     "use strict";
 
     var defaults = {
@@ -43,4 +43,4 @@
         return result;
     };
 
-})(window, window.fabric, window.codiag || (window.codiag = {}), window._);
+})(window, window.fabric, window.codiag || (window.codiag = {}));
