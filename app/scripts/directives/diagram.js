@@ -2,11 +2,12 @@
     "use strict";
 
     angular.module("codiagApp")
-        .directive("diagram", function() {
+        .directive("diagram", function(DiagramService) {
             return {
                 templateUrl: "partials/diagram.html",
                 replace: true,
                 restrict: "A",
+                room: "=",
                 link: function postLink(scope, element, attrs) {
                     codiag.initializeDiagram();
                     codiag.enableDiagramHotkeys();
@@ -15,6 +16,9 @@
 
                     scope.$emit("codiag:diagram:initialized");
 
+                    // var diagram = DiagramService.getDiagram();
+
+                    // TODO: serialize this to firebase and test further
                     var canvas = codiag.canvas;
                     var x = codiag.createStandaloneBubble({
                         text: "lorem ipsum dolor sit amet\nthis is a multiline text\nit should be centered",
