@@ -3,8 +3,8 @@
     var ref = new window.Firebase("https://codiag.firebaseio.com/rooms");
 
     angular.module("codiagApp")
-        .service("RoomsService", function RoomsService($firebase) {
-            return $firebase(ref);
+        .service("RoomsService", function RoomsService() {
+            return ref;
         });
 
 })(window, window.angular, window.Firebase, window.codiag);

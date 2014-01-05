@@ -2,8 +2,14 @@
 
 angular.module("codiagApp")
     .controller("RoomsCtrl", function($scope, RoomsService) {
-        $scope.rooms = RoomsService;
+        $scope.rooms = null;
         $scope.newRoom = false;
+        RoomsService.on('value', function(snapshot) {
+            $scope.rooms = snapshot.val();
+            if (!$scope.$$phase) {
+                $scope.$apply();
+            }
+        });
         
         $scope.showNewRoomForm = function() {
             $scope.newRoom = true;
@@ -15,15 +21,16 @@ angular.module("codiagApp")
         };
         
         $scope.createNewRoom= function() {
-            $scope.rooms.$add(
-                { name: $scope.newRoomName, id: Math.uuid(), diagram: { bubbles: [], connections: [] }}
-            );
+            RoomsService.push({ 
+                name: $scope.newRoomName, 
+                id: Math.uuid()
+            });
             
             $scope.newRoom = false;
             $scope.newRoomName = '';
         };
 
         $scope.getRoomIndex = function(roomNumber) {
-            return RoomsService.$getIndex()[roomNumber];
+            return window.codiag.util.getIndex($scope.rooms)[roomNumber];
         };
     });
