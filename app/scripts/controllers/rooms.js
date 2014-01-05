@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module("codiagApp")
-    .controller("RoomsCtrl", function($scope, RoomsService) {
+    .controller("RoomsCtrl", function($scope, RoomsService, Userservice) {
         $scope.rooms = null;
         $scope.newRoom = false;
         var roomListService = RoomsService.getAllRooms();

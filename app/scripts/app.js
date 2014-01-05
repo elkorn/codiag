@@ -22,4 +22,20 @@ angular.module("codiagApp", [
         redirectTo: "/"
       });
     $locationProvider.html5Mode(true);
+  })
+  .run( function($rootScope, $location, Userservice) {
+    $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+    if ( !Userservice.isUserLogged() ) {
+        // no logged user, we should be going to #login
+        if ( next.templateUrl !== "partials/main" ) {
+            $location.path( "/" );
+        }
+    }
+    else {
+        if ( next.templateUrl === "partials/main" ) {
+            $location.path( "/rooms/" );
+        }
+    }
   });
+ })
+ ;

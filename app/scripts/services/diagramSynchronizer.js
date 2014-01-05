@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("codiagApp")
-        .service("DiagramSynchronizer", function DiagramSynchronizer(UserService) {
+        .service("DiagramSynchronizer", function DiagramSynchronizer(Userservice) {
             return function synchronizeWithScope(scope) {
                 function applyScope() {
                     if (!scope.$$phase) {
