@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("codiagApp")
-        .service("DiagramSynchronizer", function DiagramSynchronizer() {
+        .service("DiagramSynchronizer", function DiagramSynchronizer(UserService) {
             return function synchronizeWithScope(scope) {
                 function applyScope() {
                     if (!scope.$$phase) {
@@ -68,6 +68,15 @@
                         },
                         removeBubble: function(options) {
                             scope.bubbles.child(options.refId).remove();
+                            applyScope();
+                        },
+                        freeze: function(options) {
+                            var frozenByRef = scope.bubbles.child(options.refId).child("frozenBy");
+                            frozenByRef.once("value", function(snapshot){
+                                //.set(UserService.getCurrentUserName());
+                                console.log(snapshot.val());
+                            });
+                            
                             applyScope();
                         }
                     },

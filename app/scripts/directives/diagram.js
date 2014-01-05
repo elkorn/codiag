@@ -34,6 +34,14 @@
 
                         scope.connections.on("child_added", synchronizer.local.addConnection);
                         codiag.canvas.on("connection:created", synchronizer.remote.addConnection);
+
+                        codiag.canvas.on("object:selected", function(data) {
+                            if (scope.currentlyFrozenBubble !== data.target) {
+                                scope.currentlyFrozenBubble = data.target;
+                            }
+
+                            synchronizer.remote.freeze(data);
+                        });
                     });
                 }
             };
