@@ -9,5 +9,11 @@
     codiag.util.asArray = function(obj){
         return Array.prototype.slice.call(obj);
     };
+    
+    codiag.util.getIndex = function(obj) {
+        var keys = [];
+        for(var k in obj) keys.push(k);
+        return keys;
+    };
 
 })(window, window.codiag);
