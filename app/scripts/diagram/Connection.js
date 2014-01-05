@@ -40,6 +40,8 @@
             codiag.getLineCoords(options.from, options.to),
             codiag.util.extendClone(defaults, options));
         (options.canvas || codiag.canvas).add(result);
+   
+
         return result;
     };
 

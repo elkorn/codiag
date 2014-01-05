@@ -75,7 +75,7 @@
     }
 
     function createConnectionFromSerializedData(connection) {
-        codiag.createConnection(codiag._serializer.deserializeConnectionOptions(connection));
+        codiag.createConnection(codiag.serializer.deserializeConnectionOptions(connection));
     }
 
     codiag.style = {
@@ -95,15 +95,10 @@
     codiag.disableCreationMode = disableCreationMode;
 
     codiag.serialize = function() {
-        return codiag._serializer.serialize({
+        return codiag.serializer.serialize({
             bubbles: bubbles,
             connections: connections
         });
-    };
-
-    codiag.createDiagramFromSerializedData = function(data) {
-        data.bubbles.forEach(codiag.createStandaloneBubble);
-        data.connections.forEach(createConnectionFromSerializedData);
     };
 
     codiag.initializeDiagram = function() {
@@ -138,16 +133,13 @@
         var result = new codiag.Bubble(options);
         var id = options.id || codiag.util.uuid();
         result.id = result.shape.id = id;
+        result.refId = options.refId;
 
         bubbles[id] = result;
         if (shouldBeEditableImmediately) {
             codiag.canvas.setActiveObject(result.shape);
             codiag.changeEditedBubble(result.shape);
         }
-
-        codiag.canvas.fire("bubble:created", {
-            target: result
-        });
 
         return result;
     };
@@ -156,13 +148,19 @@
         var parent = codiag.getBubble(currentParentBubble.id);
         if (parent) {
             var child = codiag.createStandaloneBubble(shapeOptions);
-            codiag.createConnection({
+            var connection = codiag.createConnection({
                 from: parent,
                 to: child
             });
 
             currentParentBubble = child.shape;
             canvas.setActiveObject(child.shape);
+
+            codiag.canvas.once("bubble:created", function() {
+                codiag.canvas.fire("connection:created", {
+                    target: connection
+                });
+            });
         }
     };
 
@@ -176,13 +174,18 @@
     };
 
     codiag.createConnection = function(options) {
-        // TODO: Refactor to work on IDs only?
-        var connection = new codiag.Connection(options);
-        options.from.connections.output.push(connection);
-        options.to.connections.input.push(connection);
-        connection.id = options.id || codiag.util.uuid();
-        connections[connection.id] = connection;
-        connection.sendToBack();
+        if (typeof(options.from) === "string" && typeof(options.to) === "string") {
+            return createConnectionFromSerializedData(options);
+        } else {
+            var connection = new codiag.Connection(options);
+            options.from.connections.output.push(connection);
+            options.to.connections.input.push(connection);
+            connection.id = options.id || codiag.util.uuid();
+            connections[connection.id] = connection;
+            connection.refId = options.refId;
+            connection.sendToBack();
+            return connection;
+        }
     };
 
     codiag.removeConnection = function(connection) {
@@ -198,14 +201,20 @@
         connection = null;
     };
 
-    codiag.removeBubble = function(bubble) {
-        var toRemove = bubbles[bubble.id];
+    codiag.removeBubble = function(bubble, silent) {
+        var toRemove = bubbles[(typeof(bubble) === "string" ? bubble : bubble.id)];
+        var refId = toRemove.refId;
         var removeConnection = codiag.removeConnection.bind(codiag);
         toRemove.connections.input.forEach(removeConnection);
         toRemove.connections.output.forEach(removeConnection);
-        delete bubbles[bubble.id];
-        canvas.remove(bubble);
+        delete bubbles[toRemove.id];
+        canvas.remove(toRemove.shape);
         disableCreationMode();
+        if (!silent) {
+            codiag.canvas.fire("bubble:removed", {
+                refId: refId
+            });
+        }
     };
 
     codiag.removeCurrentBubble = function() {

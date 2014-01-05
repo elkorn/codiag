@@ -4,33 +4,40 @@ angular.module("codiagApp")
     .controller("RoomsCtrl", function($scope, RoomsService) {
         $scope.rooms = null;
         $scope.newRoom = false;
-        RoomsService.on('value', function(snapshot) {
+        var roomListService = RoomsService.getAllRooms();
+        var roomIndex = [];
+        roomListService.on("value", function(snapshot) {
             $scope.rooms = snapshot.val();
+            roomIndex = [];
+            snapshot.forEach(function(s) {
+                roomIndex.push(s.name());
+            });
+
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
         });
-        
+
         $scope.showNewRoomForm = function() {
             $scope.newRoom = true;
         };
-        
+
         $scope.hideNewRoomForm = function() {
             $scope.newRoom = false;
-            $scope.newRoomName = '';
+            $scope.newRoomName = "";
         };
-        
-        $scope.createNewRoom= function() {
-            RoomsService.push({ 
-                name: $scope.newRoomName, 
+
+        $scope.createNewRoom = function() {
+            roomListService.push({
+                name: $scope.newRoomName,
                 id: Math.uuid()
             });
-            
+
             $scope.newRoom = false;
-            $scope.newRoomName = '';
+            $scope.newRoomName = "";
         };
 
         $scope.getRoomIndex = function(roomNumber) {
-            return window.codiag.util.getIndex($scope.rooms)[roomNumber];
+            return roomIndex[roomNumber];
         };
     });

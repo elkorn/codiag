@@ -2,9 +2,7 @@
 
 angular.module("codiagApp", [
   "ngResource",
-  "ngRoute",
-  "btford.socket-io",
-  "firebase"
+  "ngRoute"
 ])
   .config(function($routeProvider, $locationProvider) {
     $routeProvider

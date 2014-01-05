@@ -1,17 +1,13 @@
 (function(window, angular, Firebase, codiag, undefined) {
     "use strict";
-    var path = "https://codiag.firebaseio.com/rooms/:roomId";
-    var cache = {};
+    var path = "https://codiag.firebaseio.com/rooms/:roomId/diagram";
 
     angular.module("codiagApp")
-        .service("DiagramService", function DiagramService($firebase) {
+        .service("DiagramService", function DiagramService() {
             return {
                 getDiagram: function(roomId) {
-                    if(!cache.hasOwnProperty(roomId)) {
-                        cache[roomId] = new Firebase(path.replace(":roomId", roomId));
-                    }
-
-                    return $firebase(cache[roomId]);
+                    console.log("Getting diagram for room %s.", roomId);
+                    return new Firebase(path.replace(":roomId", roomId));
                 }
             };
         });

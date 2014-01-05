@@ -54,10 +54,13 @@
             currentlyEditedBubble.isInEditMode = false;
             applyTextChangesToEditedBubble();
             var editedBubble = codiag.getBubble(currentlyEditedBubble.id);
-            if (!editedBubble.getText().length) {
+            if (editedBubble.getText().length) {
+                codiag.canvas.fire("bubble:created", {
+                    target: editedBubble
+                });
+            } else {
                 codiag.removeBubble(editedBubble.shape);
             }
-
         }
 
         if (textInput) {

@@ -4,7 +4,15 @@
 
     angular.module("codiagApp")
         .service("RoomsService", function RoomsService() {
-            return ref;
+            return {
+                getAllRooms: function() {
+                    return ref;
+                },
+                getRoom: function(roomId) {
+                    console.log(ref.child(roomId).toString());
+                    return ref.child(roomId);
+                }
+            };
         });
 
 })(window, window.angular, window.Firebase, window.codiag);

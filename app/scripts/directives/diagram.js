@@ -2,23 +2,35 @@
     "use strict";
 
     angular.module("codiagApp")
-        .directive("diagram", function() {
+        .directive("diagram", function(DiagramSynchronizer) {
             return {
                 templateUrl: "partials/diagram.html",
-                replace: true,
+                replace: false,
                 restrict: "A",
-                room: "=",
+                transclude: true,
                 link: function postLink(scope) {
+                    var synchronizer = new DiagramSynchronizer(scope);
                     codiag.initializeDiagram();
                     codiag.enableDiagramHotkeys();
                     codiag.input.startTrackingMouse();
                     codiag.initializeTextEditing();
-
                     scope.$emit("codiag:diagram:initialized");
 
-                    scope.room.$on("loaded", function(roomData) {
-                        console.log(JSON.stringify(roomData.diagram, null, 2));
-                        codiag.createDiagramFromSerializedData(roomData.diagram);
+                    scope.diagram.once("value", function initializeData() {
+                        scope.bubbles = scope.diagram.child("bubbles");
+                        scope.connections = scope.diagram.child("connections");
+
+                        if (!scope.$$phase) {
+                            scope.$apply();
+                        }
+
+                        scope.bubbles.on("child_added", synchronizer.local.addBubble);
+                        scope.bubbles.on("child_removed", synchronizer.local.removeBubble);
+                        codiag.canvas.on("bubble:created", synchronizer.remote.addBubble);
+                        codiag.canvas.on("bubble:removed", synchronizer.remote.removeBubble);
+
+                        scope.connections.on("child_added", synchronizer.local.addConnection);
+                        codiag.canvas.on("connection:created", synchronizer.remote.addConnection);
                     });
                 }
             };
