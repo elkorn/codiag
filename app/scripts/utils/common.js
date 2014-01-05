@@ -1,4 +1,5 @@
 (function(window, codiag, undefined) {
+    "use strict";
 
     (codiag.util || (codiag.util = {})).get = function(key) {
         return function(obj) {
@@ -11,9 +12,7 @@
     };
     
     codiag.util.getIndex = function(obj) {
-        var keys = [];
-        for(var k in obj) keys.push(k);
-        return keys;
+        return Object.keys(obj);
     };
 
 })(window, window.codiag);

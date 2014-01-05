@@ -65,9 +65,13 @@
         });
 
         if (!connectionAlreadyExists) {
-            codiag.createConnection({
+            var connection = codiag.createConnection({
                 from: connectionOrigin,
                 to: target
+            });
+
+            codiag.canvas.fire("connection:created", {
+                target: connection
             });
         }
 
@@ -147,6 +151,12 @@
     codiag.createChildBubble = function(shapeOptions) {
         var parent = codiag.getBubble(currentParentBubble.id);
         if (parent) {
+            codiag.canvas.once("bubble:created", function() {
+                codiag.canvas.fire("connection:created", {
+                    target: connection
+                });
+            });
+
             var child = codiag.createStandaloneBubble(shapeOptions);
             var connection = codiag.createConnection({
                 from: parent,
@@ -155,12 +165,6 @@
 
             currentParentBubble = child.shape;
             canvas.setActiveObject(child.shape);
-
-            codiag.canvas.once("bubble:created", function() {
-                codiag.canvas.fire("connection:created", {
-                    target: connection
-                });
-            });
         }
     };
 

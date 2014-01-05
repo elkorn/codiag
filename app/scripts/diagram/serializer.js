@@ -4,7 +4,8 @@
     function serializeConnection(connection) {
         return {
             from: connection.from.id,
-            to: connection.to.id
+            to: connection.to.id,
+            id: connection.id
         };
     }
 

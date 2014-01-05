@@ -7,11 +7,9 @@
                 templateUrl: "partials/diagram-menu.html",
                 replace: true,
                 restrict: "A",
-                scope: {
-                    room: "="
-                },
                 link: function postLink(scope, element, attrs) {
                     scope.$on("codiag:diagram:initialized", function() {
+                        console.log("initializing menu...");
                         codiag.initializeDiagramMenu();
                     });
                 }

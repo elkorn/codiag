@@ -10,7 +10,29 @@
                     }
                 }
 
+                function initializeWithSnapshot(initializer) {
+                    function initialize(data) {
+                        return function(key) {
+                            var element = data[key];
+                            element.refId = key;
+                            initializer(element);
+                        };
+                    }
+
+                    return function(snapshot) {
+                        var data = snapshot.val();
+                        if (data) {
+                            codiag.util.getIndex(data)
+                                .forEach(initialize(data));
+                        }
+                    };
+                }
+
                 return {
+                    init: {
+                        bubbles: initializeWithSnapshot(codiag.createStandaloneBubble),
+                        connections: initializeWithSnapshot(codiag.createConnection)
+                    },
                     local: {
                         addBubble: function(snapshot) {
                             var data = snapshot.val();
@@ -21,8 +43,10 @@
                         },
                         addConnection: function(snapshot) {
                             var data = snapshot.val();
-                            data.refId = snapshot.name();
-                            codiag.createConnection(data);
+                            if (!codiag.getConnection(data.id)) {
+                                data.refId = snapshot.name();
+                                codiag.createConnection(data);
+                            }
                         },
                         removeBubble: function(snapshot) {
                             var data = snapshot.val();
@@ -39,7 +63,7 @@
                         },
                         addConnection: function(options) {
                             var connection = codiag.serializer.serializeConnection(options.target);
-                            codiag.getConnection(connection.id).refId = scope.connections.push();
+                            codiag.getConnection(connection.id).refId = scope.connections.push(connection);
                             applyScope();
                         },
                         removeBubble: function(options) {

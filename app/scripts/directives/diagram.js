@@ -24,6 +24,9 @@
                             scope.$apply();
                         }
 
+                        scope.bubbles.once("value", synchronizer.init.bubbles);
+                        scope.connections.once("value", synchronizer.init.connections);
+
                         scope.bubbles.on("child_added", synchronizer.local.addBubble);
                         scope.bubbles.on("child_removed", synchronizer.local.removeBubble);
                         codiag.canvas.on("bubble:created", synchronizer.remote.addBubble);
