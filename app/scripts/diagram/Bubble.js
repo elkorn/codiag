@@ -106,10 +106,8 @@
             return {
                 id: this.id,
                 text: this.getText(),
-                coords: {
-                    left: this.shape.getLeft(),
-                    top: this.shape.getTop()
-                }
+                left: this.shape.getLeft(),
+                top: this.shape.getTop()
             };
         },
         updateOutputConnections: function() {
@@ -117,6 +115,23 @@
         },
         updateInputConnections: function() {
             this.connections.input.forEach(updateInputConnectionCoords.bind(this, this));
+        },
+        freeze: function() {
+            if (codiag.canvas.getActiveObject() === this.shape) {
+                // TODO: cancel editing etc.
+                //codiag.canvas.setActiveObject(null);
+            }
+
+            this.shape.setOpacity(codiag.style.frozenOpacity);
+            this.shape.selectable = false;
+            codiag.canvas.renderAll();
+            return this;
+        },
+        unfreeze: function() {
+            this.shape.setOpacity(1);
+            this.shape.selectable = true;
+            codiag.canvas.renderAll();
+            return this;
         }
     };
 })(window, window.fabric, window.codiag || (window.codiag = {}));

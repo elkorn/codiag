@@ -29,6 +29,13 @@
             }
 
             return result;
+        },
+
+        deserializeConnectionOptions: function(serializedOptions) {
+            return {
+                from: codiag.getBubble(serializedOptions.from),
+                to: codiag.getBubble(serializedOptions.to)
+            };
         }
     };
 

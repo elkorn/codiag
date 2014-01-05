@@ -5,6 +5,7 @@
         .controller("DiagramCtrl", function($scope, $routeParams, DiagramService) {
             var currentRoomId = $routeParams.roomId;
             $scope.room = DiagramService.getDiagram(currentRoomId);
+            
         });
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.jQuery);

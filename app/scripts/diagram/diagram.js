@@ -74,6 +74,10 @@
         codiag.disableCreationMode();
     }
 
+    function createConnectionFromSerializedData(connection) {
+        codiag.createConnection(codiag._serializer.deserializeConnectionOptions(connection));
+    }
+
     codiag.style = {
         bubblePadding: 20,
         font: "sans-serif",
@@ -97,6 +101,11 @@
         });
     };
 
+    codiag.createDiagramFromSerializedData = function(data) {
+        data.bubbles.forEach(codiag.createStandaloneBubble);
+        data.connections.forEach(createConnectionFromSerializedData);
+    };
+
     codiag.initializeDiagram = function() {
         canvas = new fabric.Canvas("canvas", {
             selection: false
@@ -111,7 +120,7 @@
         });
     };
 
-    codiag.createStandaloneBubble = function(shapeOptions, connections) {
+    codiag.createStandaloneBubble = function(shapeOptions) {
         var options = fabric.util.object.extend({}, shapeOptions);
         var shouldBeEditableImmediately = !options.hasOwnProperty("text");
         if (!(options.hasOwnProperty("left") || options.hasOwnProperty("top"))) {
@@ -126,8 +135,8 @@
             options.width = 100;
         }
 
-        var result = new codiag.Bubble(options, connections);
-        var id = codiag.util.uuid();
+        var result = new codiag.Bubble(options);
+        var id = options.id || codiag.util.uuid();
         result.id = result.shape.id = id;
 
         bubbles[id] = result;
@@ -143,10 +152,10 @@
         return result;
     };
 
-    codiag.createChildBubble = function(shapeOptions, connections) {
+    codiag.createChildBubble = function(shapeOptions) {
         var parent = codiag.getBubble(currentParentBubble.id);
         if (parent) {
-            var child = codiag.createStandaloneBubble(shapeOptions, connections);
+            var child = codiag.createStandaloneBubble(shapeOptions);
             codiag.createConnection({
                 from: parent,
                 to: child
@@ -171,7 +180,7 @@
         var connection = new codiag.Connection(options);
         options.from.connections.output.push(connection);
         options.to.connections.input.push(connection);
-        connection.id = codiag.util.uuid();
+        connection.id = options.id || codiag.util.uuid();
         connections[connection.id] = connection;
         connection.sendToBack();
     };

@@ -2,13 +2,13 @@
     "use strict";
 
     angular.module("codiagApp")
-        .directive("diagram", function(DiagramService) {
+        .directive("diagram", function() {
             return {
                 templateUrl: "partials/diagram.html",
                 replace: true,
                 restrict: "A",
                 room: "=",
-                link: function postLink(scope, element, attrs) {
+                link: function postLink(scope) {
                     codiag.initializeDiagram();
                     codiag.enableDiagramHotkeys();
                     codiag.input.startTrackingMouse();
@@ -16,28 +16,9 @@
 
                     scope.$emit("codiag:diagram:initialized");
 
-                    // var diagram = DiagramService.getDiagram();
-
-                    // TODO: serialize this to firebase and test further
-                    var canvas = codiag.canvas;
-                    var x = codiag.createStandaloneBubble({
-                        text: "lorem ipsum dolor sit amet\nthis is a multiline text\nit should be centered",
-                        left: 10,
-                        top: 100,
-                        canvas: canvas
-                    });
-
-                    var y = codiag.createStandaloneBubble({
-                        text: "the second element\nwith multiline text",
-                        left: 300,
-                        top: 400,
-                        canvas: canvas
-                    });
-
-                    codiag.createConnection({
-                        from: x,
-                        to: y,
-                        canvas: canvas
+                    scope.room.$on("loaded", function(roomData) {
+                        console.log(JSON.stringify(roomData.diagram, null, 2));
+                        codiag.createDiagramFromSerializedData(roomData.diagram);
                     });
                 }
             };
