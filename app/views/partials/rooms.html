@@ -1,9 +1,37 @@
-<p>This is the rooms view.</p>
-<ul>
-    <li data-ng-repeat="room in rooms">
-        <a  data-ng-click="selectRoom(room)"
-            data-ng-href="#/rooms/{{getRoomIndex($index)}}">
-            {{room.name}}
-        </a>
-    </li>
-</ul>
+<div ng-include="'partials/navbar'"></div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">This is the rooms view.</h3> <br />
+        <button type="button" class="btn btn-default btn-medium" ng-click="showNewRoomForm()">
+            <span class="glyphicon glyphicon-plus"></span>
+        </button>
+    </div>
+
+    <div class="panel-body" ng-show="newRoom">
+        
+        <div class="input-group">
+            <span class="input-group-addon">Name:</span>
+            <input type="text" class="form-control" ng-model="newRoomName">
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="createNewRoom()">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </button>
+            </span>
+            <span class="input-group-btn">
+                <button class="btn btn-default" type="button" ng-click="hideNewRoomForm()">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </span>
+        </div>
+    </div>
+    
+    <ul class="list-group">
+        <li class="list-group-item" data-ng-repeat="room in rooms">
+            <a
+                data-ng-href="#/rooms/{{getRoomIndex($index)}}">
+                {{room.name}}
+            </a>
+        </li>
+    </ul>
+</div>
