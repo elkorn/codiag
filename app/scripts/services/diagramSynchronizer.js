@@ -65,12 +65,10 @@
                     var childRef = scope.bubbles.child(bubble.refId);
 
                     childRef.child("left").on("value", function(snapshot) {
-                        console.log("left");
                         bubble.setLeft(snapshot.val());
                     });
 
                     childRef.child("top").on("value", function(snapshot) {
-                        console.log("top");
                         bubble.setTop(snapshot.val());
                     });
                 }

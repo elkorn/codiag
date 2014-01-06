@@ -10,6 +10,7 @@
      */
 
     var hotkeys = {
+        "EDIT_BUBBLE": "space",
         "ADD_BUBBLE": "enter",
         "ADD_CHILD_BUBBLE": "ins",
         "CANCEL": "esc",
@@ -18,7 +19,7 @@
     };
 
     codiag.enableDiagramHotkeys = function() {
-        Mousetrap.bind("space", function() {
+        Mousetrap.bind(hotkeys.EDIT_BUBBLE, function() {
             var activeObject = codiag.canvas.getActiveObject(),
                 result;
 
@@ -36,8 +37,6 @@
 
             return result;
         });
-
-        console.log("bound space");
 
         Mousetrap.bind(hotkeys.ADD_BUBBLE, function() {
             var activeObject = codiag.canvas.getActiveObject();

@@ -12,7 +12,6 @@
     var canvas;
 
     function disableCreationMode() {
-        console.log("Leaving creation mode.");
         codiag.canvas.off("mouse:up", createStandaloneBubbleOnDemand);
         codiag.canvas.off("mouse:up", createChildBubbleOnDemand);
         codiag.canvas.off("object:selected", createConnectionOnDemand);
@@ -23,7 +22,6 @@
 
     function enableCreationMode() {
         if (!isInCreationMode) {
-            console.log("Entering creation mode.");
             isInCreationMode = true;
             codiag.canvas.fire("mode:creation:enabled");
         }

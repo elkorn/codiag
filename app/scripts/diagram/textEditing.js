@@ -49,7 +49,6 @@
     }
 
     codiag.changeEditedBubble = function(target) {
-        console.log("changing currentlyEditedBubble to", (target ? target.id : target));
         if (currentlyEditedBubble) {
             currentlyEditedBubble.isInEditMode = false;
             var isEditing = !!currentlyEditedBubble.getText();
@@ -96,7 +95,6 @@
     codiag.initializeTextEditing = function() {
         diagramContainer = document.querySelector(".diagram-container");
         codiag.canvas.on("object:enableEditMode", function enableEditMode(e) {
-            console.log("object:enableEditMode");
             codiag.changeEditedBubble(e.target);
         });
 
@@ -106,13 +104,11 @@
 
         codiag.canvas.on("object:selected", function(e) {
             if (currentlyEditedBubble) {
-                console.log("object:selected");
                 var selectingCurrentBubble = e.target === currentlyEditedBubble;
                 if (!selectingCurrentBubble) {
                     codiag.changeEditedBubble(null);
                     codiag.disableCreationMode();
                 } else {
-                    console.log(textInput.selectionStart);
                     setCaretPosition(textInput, textInput.selectionStart);
                 }
             }

@@ -9,7 +9,6 @@
                     return ref;
                 },
                 getRoom: function(roomId) {
-                    console.log(ref.child(roomId).toString());
                     return ref.child(roomId);
                 }
             };

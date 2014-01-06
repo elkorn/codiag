@@ -6,7 +6,6 @@
         .service("DiagramService", function DiagramService() {
             return {
                 getDiagram: function(roomId) {
-                    console.log("Getting diagram for room %s.", roomId);
                     return new Firebase(path.replace(":roomId", roomId));
                 }
             };

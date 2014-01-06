@@ -16,6 +16,8 @@
                     codiag.initializeTextEditing();
                     scope.$emit("codiag:diagram:initialized");
 
+                    scope.$on("$routeChangeStart", codiag.disableDiagramHotkeys);
+
                     function unfreezeBubbleOnRouteChange(data) {
                         scope.$on("$routeChangeStart", function() {
                             synchronizer.remote.unfreeze({
