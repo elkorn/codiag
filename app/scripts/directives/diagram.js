@@ -77,6 +77,7 @@
                         });
 
                         codiag.canvas.on("object:deselected", synchronizer.remote.unfreeze);
+                        codiag.canvas.on("object:moved", synchronizer.remote.moveBubble);
                     });
                 }
             };

@@ -84,8 +84,14 @@
     };
 
     codiag.Bubble.prototype = {
+        getLeft: function() {
+            return this.shape.getLeft();
+        },
         getText: function() {
             return this.shape.item(1).getText();
+        },
+        getTop: function() {
+            return this.shape.getTop();
         },
         setText: function(newText) {
             this.options.canvas.remove(this.shape);
@@ -98,6 +104,18 @@
             workingOptions.width = null;
             this.shape = createBubbleObject(workingOptions);
             this.updateConnections();
+        },
+        setLeft: function(left) {
+            var result = this.shape.setLeft(left);
+            this.updateConnections();
+            codiag.canvas.renderAll();
+            return result;
+        },
+        setTop: function(top) {
+            var result = this.shape.setTop(top);
+            this.updateConnections();
+            codiag.canvas.renderAll();
+            return result;
         },
         updateConnections: function() {
             this.updateInputConnections();

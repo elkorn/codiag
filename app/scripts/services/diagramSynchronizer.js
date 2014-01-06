@@ -61,10 +61,26 @@
                     });
                 }
 
+                function synchronizeCoordinateChangesForBubble(bubble) {
+                    var childRef = scope.bubbles.child(bubble.refId);
+
+                    childRef.child("left").on("value", function(snapshot) {
+                        console.log("left");
+                        bubble.setLeft(snapshot.val());
+                    });
+
+                    childRef.child("top").on("value", function(snapshot) {
+                        console.log("top");
+                        bubble.setTop(snapshot.val());
+                    });
+                }
+
                 function bubbleInitializer(bubbleData) {
                     codiag.createStandaloneBubble(bubbleData);
                     handleFreezingForBubble(bubbleData);
-                    synchronizeTextChangesForBubble(codiag.getBubble(bubbleData.id));
+                    var bubble = codiag.getBubble(bubbleData.id);
+                    synchronizeTextChangesForBubble(bubble);
+                    synchronizeCoordinateChangesForBubble(bubble);
                 }
 
                 return {
@@ -77,7 +93,7 @@
                             var data = snapshot.val();
                             if (!codiag.getBubble(data.id)) {
                                 data.refId = snapshot.name();
-                                codiag.createStandaloneBubble(data);
+                                bubbleInitializer(data);
                             }
                         },
                         addConnection: function(snapshot) {
@@ -111,10 +127,18 @@
                             applyScope();
                         },
                         removeBubble: function(data) {
+                            if (!data.refId) {
+                                return;
+                            }
+
                             scope.bubbles.child(data.refId).remove();
                             applyScope();
                         },
                         removeConnection: function(data) {
+                            if(!data.target.refId) {
+                                return;
+                            }
+
                             scope.connections.child(data.target.refId).remove();
                             applyScope();
                         },
@@ -126,6 +150,16 @@
                             }
 
                             scope.bubbles.child(data.target.refId).child("text").set(data.target.getText());
+                            applyScope();
+                        },
+                        moveBubble: function(data) {
+                            var refId = data.target.refId;
+                            if (!refId) {
+                                return;
+                            }
+
+                            scope.bubbles.child(refId).child("top").set(data.target.getTop());
+                            scope.bubbles.child(refId).child("left").set(data.target.getLeft());
                             applyScope();
                         }
                     },

@@ -82,6 +82,12 @@
         codiag.createConnection(codiag.serializer.deserializeConnectionOptions(connection));
     }
 
+    function objectMoved(data) {
+        canvas.fire("object:moved", {
+            target: codiag.getBubble(data.target.id)
+        });
+    }
+
     (codiag.util || (codiag.util = {})).uuid = function() {
         var result;
         var existingUuids = Object.keys(bubbles).concat(Object.keys(connections));
@@ -127,6 +133,8 @@
                 });
             }
         });
+
+        canvas.on("object:moving", codiag.util.debounce(objectMoved));
     };
 
     codiag.getCurrentlySelectedBubble = function() {
