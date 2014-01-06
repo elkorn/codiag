@@ -22,4 +22,6 @@ angular.module("codiagApp")
     $scope.isActive = function(route) {
       return route === $location.path();
     };
+    
+    $scope.userLogged = Userservice.isUserLogged();
   });

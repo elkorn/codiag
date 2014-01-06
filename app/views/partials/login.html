@@ -1,0 +1,25 @@
+<div ng-include="'partials/navbar'"></div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Please login</h3>
+    </div>
+    <div class="panel-body">
+        <form name="myForm">
+        Email: <input type="email" class="form-control" ng-model="email" name="input" required>
+        Password: <input type="password" class="form-control" ng-model="pass" required>
+        </form>
+        <br />
+        <div class="panel panel-danger" ng-show="loginError">
+            <div class="panel-heading">
+                <h3 class="panel-title">Login error!</h3>
+            </div>
+            <div class="panel-body">
+                {{loginError}}
+            </div>
+        </div>
+        <button class="btn btn-default" type="button" ng-click="login()">
+            Login
+        </button>
+    </div>
+</div>

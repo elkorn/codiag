@@ -26,11 +26,13 @@
                     }
                 } else {
                     // user is logged out
-                    loggedUser = null;
-                    $location.path("/");
-                    if(!$rootScope.$$phase) {
-                        $rootScope.$apply();
+                    if (loggedUser !== null) {
+                        $location.path("/login");
+                        if(!$rootScope.$$phase) {
+                            $rootScope.$apply();
+                        }
                     }
+                    loggedUser = null;
                 }
             });
   
@@ -55,6 +57,7 @@
                 },
                 logout: function() {
                     auth.logout();
+                    loggedUser = null;
                 },
                 isUserLogged: function() {
                     if (loggedUser)

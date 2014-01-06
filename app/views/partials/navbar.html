@@ -3,7 +3,7 @@
     <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
         <a ng-href="{{item.link}}">{{item.title}}</a>
     </li>
-    <li>
+    <li ng-show="userLogged">
         <a ng-click="logout()" href="#">Logout</a>
     </li>
   </ul>

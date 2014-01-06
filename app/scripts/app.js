@@ -8,15 +8,23 @@ angular.module("codiagApp", [
     $routeProvider
         .when("/", {
             templateUrl: "partials/main",
-            controller: "MainCtrl"
+            controller: "MainCtrl",
+            access: 'all'
+        })
+        .when("/login", {
+            templateUrl: "partials/login",
+            controller: "LoginCtrl",
+            access: 'not-user'
         })
         .when("/rooms", {
             templateUrl: "partials/rooms",
-            controller: "RoomsCtrl"
+            controller: "RoomsCtrl",
+            access: 'user'
         })
         .when("/rooms/:roomId", {
             templateUrl: "partials/diagram-room",
-            controller: "DiagramCtrl"
+            controller: "DiagramCtrl",
+            access: 'user'
         })
         .otherwise({
             redirectTo: "/"
@@ -24,7 +32,7 @@ angular.module("codiagApp", [
     $locationProvider.html5Mode(true);
 })
 .run( function($rootScope, $location, Userservice, UserRoomService) {
-    if ($location.path() !== "/") {
+    if ($location.path() !== "/login" && $location.path() !== "/") {
         Userservice.setOriginalPath($location.path());
     }
     
@@ -32,14 +40,16 @@ angular.module("codiagApp", [
         // will move this somewhere else eventually
         UserRoomService.roomUnregisterUser();
         if ( !Userservice.isUserLogged() ) {
-            if (next.templateUrl !== "partials/main") {
-                $location.path("/");
+            if (next.access === 'user') {
+                $location.path("/login");
             }
         }
         else {
-            if (next.templateUrl === "partials/main") {
-                $location.path("/rooms/");
+            if (next.access === 'not-user') {
+                $location.path("/");
             }
         }
+        
+        
     });
 });
