@@ -24,4 +24,6 @@ angular.module("codiagApp")
     };
     
     $scope.userLogged = Userservice.isUserLogged();
+    
+    $scope.username = Userservice.getCurrentUserName;
   });

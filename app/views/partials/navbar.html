@@ -1,14 +1,20 @@
 <div class="header" ng-controller="NavbarCtrl">
-  <ul class="nav nav-pills pull-right">
-    <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
-        <a ng-href="{{item.link}}">{{item.title}}</a>
-    </li>
-    <li ng-show="userLogged">
-        <a ng-click="logout()" href="#">Logout</a>
-    </li>
-    <li ng-hide="userLogged">
-        <a href="/login">Login/Register</a>
-    </li>
-  </ul>
-  <h3 class="text-muted">codiag</h3>
+    
+    <ul class="nav nav-pills pull-right">
+        <li ng-show="userLogged">
+            <p class="navbar-text navbar-text-custom">Signed in as {{username()}}</p>
+        </li>
+        <li class="divider-vertical-custom" ng-show="userLogged">
+        </li>
+        <li ng-repeat="item in menu" ng-class="{active: isActive(item.link)}">
+            <a ng-href="{{item.link}}">{{item.title}}</a>
+        </li>
+        <li ng-show="userLogged">
+            <a ng-click="logout()" href="#">Logout</a>
+        </li>
+        <li ng-hide="userLogged">
+            <a href="/login">Login/Register</a>
+        </li>
+    </ul>
+    <h3 class="text-muted">codiag</h3>
 </div>
