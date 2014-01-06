@@ -6,6 +6,7 @@
       .service("Userservice", function Userservice($location, $rootScope) {
             
             var loggedUser = null;
+            var originalPath = null;
             var auth = new FirebaseSimpleLogin(ref, function(error, user) {
                 if (error) {
                     // an error occurred while attempting login
@@ -13,7 +14,13 @@
                 } else if (user) {
                     // user authenticated with Firebase
                     loggedUser = user;
-                    $location.path("/rooms/");
+                    if (originalPath) {
+                        $location.path(originalPath);
+                        originalPath = null;
+                    }
+                    else {
+                        $location.path("/rooms/");
+                    }
                     if(!$rootScope.$$phase) {
                         $rootScope.$apply();
                     }
@@ -28,6 +35,9 @@
             });
   
             return {
+                setOriginalPath: function(path) {
+                    originalPath = path;
+                },
                 getUserService: function() {
                     return auth;
                 },

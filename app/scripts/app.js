@@ -24,6 +24,9 @@ angular.module("codiagApp", [
     $locationProvider.html5Mode(true);
 })
 .run( function($rootScope, $location, Userservice) {
+    if ($location.path() !== "/") {
+        Userservice.setOriginalPath($location.path());
+    }
     $rootScope.$on("$routeChangeStart", function(event, next, current) {
         if ( !Userservice.isUserLogged() ) {
             if (next.templateUrl !== "partials/main") {
