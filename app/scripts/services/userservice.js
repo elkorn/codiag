@@ -19,6 +19,11 @@
                     }
                 } else {
                     // user is logged out
+                    loggedUser = null;
+                    $location.path( "/" );
+                    if(!$rootScope.$$phase) {
+                        $rootScope.$apply();
+                    }
                 }
             });
   
