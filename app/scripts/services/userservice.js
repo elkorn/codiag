@@ -64,6 +64,16 @@
                         return loggedUser.id;
                     else
                         return null;
+                },
+                register: function(email, password) {
+                    auth.createUser(email, password, function(error, user) {
+                        if (!error) {
+                            $rootScope.$broadcast("register:ok");
+                        }
+                        else {
+                            $rootScope.$broadcast("register:error", error);
+                        }
+                    });
                 }
             };
       });

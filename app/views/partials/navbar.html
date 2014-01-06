@@ -6,6 +6,9 @@
     <li ng-show="userLogged">
         <a ng-click="logout()" href="#">Logout</a>
     </li>
+    <li ng-hide="userLogged">
+        <a href="/login">Login/Register</a>
+    </li>
   </ul>
   <h3 class="text-muted">codiag</h3>
 </div>
