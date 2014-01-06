@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("codiagApp")
-        .directive("diagramMenu", function() {
+        .directive("diagramMenu", function(Userservice) {
             return {
                 templateUrl: "partials/diagram-menu.html",
                 replace: true,
@@ -12,6 +12,10 @@
                         console.log("initializing menu...");
                         codiag.initializeDiagramMenu();
                     });
+
+                    scope.username = function() {
+                        return Userservice.getCurrentUserName();
+                    };
                 }
             };
         });

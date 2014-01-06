@@ -15,7 +15,6 @@
             $scope.diagram = DiagramService.getDiagram(currentRoomId);
             $scope.bubbles = $scope.diagram.child("bubbles");
             $scope.connections = $scope.diagram.child("connections");
-            $scope.username = Userservice.getCurrentUserName();
         });
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.jQuery);

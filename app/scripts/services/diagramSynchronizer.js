@@ -2,7 +2,11 @@
     "use strict";
 
     angular.module("codiagApp")
-        .service("DiagramSynchronizer", function DiagramSynchronizer() {
+        .service("DiagramSynchronizer", function DiagramSynchronizer(Userservice) {
+            function canUnfreeze(id) {
+                return codiag.getBubble(id).frozenBy === Userservice.getCurrentUserName();
+            }
+
             return function synchronizeWithScope(scope) {
                 function applyScope() {
                     if (!scope.$$phase) {
@@ -41,7 +45,7 @@
                 }
 
                 function handleFreezingForBubble(data) {
-                    if (data.frozenBy && data.frozenBy !== scope.username) {
+                    if (data.frozenBy && data.frozenBy !== Userservice.getCurrentUserName()) {
                         codiag.getBubble(data.id).freeze();
                     } else if (!data.frozenBy) {
                         codiag.getBubble(data.id).unfreeze();
@@ -98,7 +102,7 @@
                             scope.bubbles.child(options.refId).remove();
                             applyScope();
                         },
-                        freeze: changeFrozenStatus(scope.username, scope),
+                        freeze: changeFrozenStatus(Userservice.getCurrentUserName(), scope),
                         unfreeze: changeFrozenStatus("", scope)
                     },
                 };
