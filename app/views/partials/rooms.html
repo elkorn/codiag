@@ -29,8 +29,20 @@
     <ul class="list-group">
         <li class="list-group-item" data-ng-repeat="room in rooms">
             <a
-                data-ng-href="#/rooms/{{getRoomIndex($index)}}">
+                ng-show="room.usernames.length"
+                data-ng-href="#/rooms/{{getRoomIndex($index)}}"
+                data-toggle="popover"
+                data-placement="bottom"
+                title=""
+                data-content="{{listUsers(room.usernames)}}"
+                data-original-title="Users:">
                 {{room.name}}
+                <span  class="badge" >{{room.usernames.length}}</span>
+            </a>
+            <a
+                ng-hide="room.usernames.length"
+                data-ng-href="#/rooms/{{getRoomIndex($index)}}">
+                {{room.name}} 
             </a>
         </li>
     </ul>

@@ -1,7 +1,7 @@
 "use strict";
 
 angular.module("codiagApp")
-    .controller("RoomsCtrl", function($scope, RoomsService, Userservice) {
+    .controller("RoomsCtrl", function($scope, RoomsService, UserRoomService) {
         $scope.rooms = null;
         $scope.newRoom = false;
         var roomListService = RoomsService.getAllRooms();
@@ -11,12 +11,32 @@ angular.module("codiagApp")
             roomIndex = [];
             snapshot.forEach(function(s) {
                 roomIndex.push(s.name());
+                
+                var roomUsers = s.val().users;
+                var roomUserNames = [];
+                var i = null;
+                for (i in roomUsers) {
+                    roomUserNames.push(roomUsers[i]);
+                }
+                var uniqueRoomUserNames = roomUserNames.filter(function(elem, pos) {
+                    return roomUserNames.indexOf(elem) === pos;
+                });
+                $scope.rooms[s.name()].usernames = uniqueRoomUserNames;
             });
 
             if (!$scope.$$phase) {
                 $scope.$apply();
             }
+            
+            $("[data-toggle*='popover']").popover({
+                trigger: 'hover',
+                html: true
+            });
         });
+        
+        $scope.listUsers = function(userArray) {
+            return userArray.join("<br />");
+        };
 
         $scope.showNewRoomForm = function() {
             $scope.newRoom = true;

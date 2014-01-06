@@ -44,6 +44,9 @@
                 getCurrentUserName: function() {
                     return loggedUser.email;
                 },
+                getCurrentUserId: function() {
+                    return loggedUser.id;
+                },
                 login: function(email, password) {
                     auth.login("password", {
                         email: email,
