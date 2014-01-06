@@ -16,6 +16,14 @@
                     codiag.initializeTextEditing();
                     scope.$emit("codiag:diagram:initialized");
 
+                    function unfreezeBubbleOnRouteChange(data) {
+                        scope.$on("$routeChangeStart", function() {
+                            synchronizer.remote.unfreeze({
+                                target: codiag.getBubble(data.id)
+                            });
+                        });
+                    }
+
                     scope.diagram.once("value", function initializeData() {
                         scope.bubbles = scope.diagram.child("bubbles");
                         scope.connections = scope.diagram.child("connections");
@@ -24,7 +32,14 @@
                             scope.$apply();
                         }
 
-                        scope.bubbles.once("value", synchronizer.init.bubbles);
+                        scope.bubbles.once("value", function(snapshot) {
+                            synchronizer.init.bubbles(snapshot);
+                            var data = snapshot.val();
+                            Object.keys(data).forEach(function(key){
+                                unfreezeBubbleOnRouteChange(data[key]);
+                            });
+                        });
+
                         scope.connections.once("value", synchronizer.init.connections);
 
                         scope.bubbles.on("child_added", synchronizer.local.addBubble);
@@ -35,13 +50,24 @@
                         scope.connections.on("child_added", synchronizer.local.addConnection);
                         codiag.canvas.on("connection:created", synchronizer.remote.addConnection);
 
+                        scope.bubbles.on("child_changed", synchronizer.local.handleFreezing);
                         codiag.canvas.on("object:selected", function(data) {
-                            if (scope.currentlyFrozenBubble !== data.target) {
-                                scope.currentlyFrozenBubble = data.target;
+                            var bubble = codiag.getBubble(data.target.id);
+                            var id = bubble.id;
+                            if (scope.currentlyFrozenBubble && scope.currentlyFrozenBubble !== id) {
+                                synchronizer.remote.unfreeze({
+                                    target: codiag.getBubble(scope.currentlyFrozenBubble)
+                                });
+
+                                scope.currentlyFrozenBubble = id;
                             }
 
-                            synchronizer.remote.freeze(data);
+                            synchronizer.remote.freeze({
+                                target: bubble
+                            });
                         });
+
+                        codiag.canvas.on("object:deselected", synchronizer.remote.unfreeze);
                     });
                 }
             };

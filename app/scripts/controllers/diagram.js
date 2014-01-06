@@ -2,18 +2,20 @@
     "use strict";
 
     angular.module("codiagApp")
-        .controller("DiagramCtrl", function($scope, $routeParams, DiagramService, RoomsService) {
+        .controller("DiagramCtrl", function($scope, $routeParams, DiagramService, RoomsService, Userservice) {
             var currentRoomId = $routeParams.roomId;
             $scope.room = null;
-            RoomsService.getRoom(currentRoomId).on("value", function(snapshot){
+            RoomsService.getRoom(currentRoomId).on("value", function(snapshot) {
                 $scope.room = snapshot.val();
-                if(!$scope.$$phase) {
+                if (!$scope.$$phase) {
                     $scope.$apply();
                 }
             });
+
             $scope.diagram = DiagramService.getDiagram(currentRoomId);
             $scope.bubbles = $scope.diagram.child("bubbles");
             $scope.connections = $scope.diagram.child("connections");
-       });
+            $scope.username = Userservice.getCurrentUserName();
+        });
 
 })(window, window.fabric, window.codiag || (window.codiag = {}), window.jQuery);

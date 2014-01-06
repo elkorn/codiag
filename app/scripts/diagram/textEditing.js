@@ -14,14 +14,14 @@
     }
 
     function updateInputPosition() {
-        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubblePadding / 2 - 1);
-        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubblePadding / 2 - 1);
+        textInput.style.left = pixels(currentlyEditedBubble.left + codiag.style.bubble.padding / 2 - 1);
+        textInput.style.top = pixels(currentlyEditedBubble.top + codiag.style.bubble.padding / 2 - 1);
     }
 
     function createCanvasInputForEditedBubble() {
         textInput = document.createElement("textarea");
-        textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - codiag.style.bubblePadding);
-        textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - codiag.style.bubblePadding);
+        textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - codiag.style.bubble.padding);
+        textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - codiag.style.bubble.padding);
         textInput.style.position = "absolute";
         textInput.style["border-radius"] = textInput.style.padding = pixels(15);
         updateInputPosition();
@@ -70,7 +70,6 @@
                 codiag.disableCreationMode();
             }
         }
-
         currentlyEditedBubble = target;
         if (currentlyEditedBubble) {
             codiag.disableCreationMode();
@@ -101,7 +100,6 @@
         });
 
         codiag.canvas.on("selection:cleared", function clearEditMode() {
-            console.log("selection:cleared");
             codiag.changeEditedBubble(null);
         });
 

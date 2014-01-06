@@ -7,8 +7,8 @@
         var opts = fabric.util.object.extend(fabric.util.object.clone(shapeOptions), {
             top: 0,
             left: 0,
-            fill: "rgb(230,230,230)",
-            stroke: "rgba(150,150,150,0.5)",
+            fill: codiag.style.bubble.normal.fill,
+            stroke: codiag.style.bubble.normal.stroke,
             strokeWidth: 3,
             rx: 15,
             ry: 15
@@ -16,13 +16,14 @@
 
         var rect = new fabric.Rect(opts);
         var text = new fabric.Text(shapeOptions.text || "", {
-            top: codiag.style.bubblePadding,
-            left: codiag.style.bubblePadding,
-            textAlign: "center"
+            top: codiag.style.bubble.padding,
+            left: codiag.style.bubble.padding,
+            textAlign: "center",
+            fill: codiag.style.bubble.normal.fontColor
         });
 
-        rect.setWidth((shapeOptions.width || text.width) + 2 * codiag.style.bubblePadding);
-        rect.setHeight(text.height + 2 * codiag.style.bubblePadding);
+        rect.setWidth((shapeOptions.width || text.width) + 2 * codiag.style.bubble.padding);
+        rect.setHeight(text.height + 2 * codiag.style.bubble.padding);
         var result = new fabric.Group([rect, text], {
             top: top,
             left: left
@@ -67,6 +68,7 @@
         var self = this;
 
         this.shape = createBubbleObject(this.options);
+        this.frozenBy = "";
         this.connections = connections || {
             input: [],
             output: []
@@ -116,21 +118,29 @@
         updateInputConnections: function() {
             this.connections.input.forEach(updateInputConnectionCoords.bind(this, this));
         },
-        freeze: function() {
+        freeze: function(freezer) {
             if (codiag.canvas.getActiveObject() === this.shape) {
                 // TODO: cancel editing etc.
                 //codiag.canvas.setActiveObject(null);
             }
 
-            this.shape.setOpacity(codiag.style.frozenOpacity);
+            this.shape.item(0).set(codiag.style.bubble.frozen);
+            this.shape.item(1).set({
+                fill: codiag.style.bubble.frozen.fontColor
+            });
             this.shape.selectable = false;
+            this.frozenBy = freezer;
             codiag.canvas.renderAll();
             return this;
         },
         unfreeze: function() {
-            this.shape.setOpacity(1);
+            this.shape.item(0).set(codiag.style.bubble.normal);
+            this.shape.item(1).set({
+                fill: codiag.style.bubble.normal.fontColor
+            });
             this.shape.selectable = true;
             codiag.canvas.renderAll();
+            this.frozenBy = "";
             return this;
         }
     };

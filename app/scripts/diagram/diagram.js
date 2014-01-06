@@ -82,12 +82,6 @@
         codiag.createConnection(codiag.serializer.deserializeConnectionOptions(connection));
     }
 
-    codiag.style = {
-        bubblePadding: 20,
-        font: "sans-serif",
-        fontSize: 12
-    };
-
     (codiag.util || (codiag.util = {})).uuid = function() {
         var result;
         var existingUuids = Object.keys(bubbles).concat(Object.keys(connections));
@@ -115,8 +109,24 @@
         codiag.canvas = canvas;
 
         canvas.on("object:selected", function() {
+            if (currentParentBubble) {
+                canvas.fire("object:deselected", {
+                    target: codiag.getBubble(currentParentBubble.id)
+                });
+            }
+
             currentParentBubble = canvas.getActiveObject();
         });
+
+        canvas.on("before:selection:cleared", function(data) {
+            canvas.fire("object:deselected", {
+                target: codiag.getBubble(data.target.id)
+            });
+        });
+    };
+
+    codiag.getCurrentlySelectedBubble = function() {
+        return currentParentBubble;
     };
 
     codiag.createStandaloneBubble = function(shapeOptions) {
@@ -150,15 +160,19 @@
 
     codiag.createChildBubble = function(shapeOptions) {
         var parent = codiag.getBubble(currentParentBubble.id);
-        if (parent) {
-            codiag.canvas.once("bubble:created", function() {
-                codiag.canvas.fire("connection:created", {
-                    target: connection
-                });
-            });
+        var connection;
 
+        function fireConnectionCreated() {
+            codiag.canvas.off("bubble:created", fireConnectionCreated);
+            codiag.canvas.fire("connection:created", {
+                target: connection
+            });
+        }
+
+        if (parent) {
+            codiag.canvas.on("bubble:created", fireConnectionCreated);
             var child = codiag.createStandaloneBubble(shapeOptions);
-            var connection = codiag.createConnection({
+            connection = codiag.createConnection({
                 from: parent,
                 to: child
             });
@@ -169,7 +183,6 @@
     };
 
     codiag.getBubble = function(id) {
-        console.log("searching for", id);
         return bubbles[id];
     };
 

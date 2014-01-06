@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("codiagApp")
-        .service("DiagramSynchronizer", function DiagramSynchronizer(Userservice) {
+        .service("DiagramSynchronizer", function DiagramSynchronizer() {
             return function synchronizeWithScope(scope) {
                 function applyScope() {
                     if (!scope.$$phase) {
@@ -28,9 +28,34 @@
                     };
                 }
 
+                function changeFrozenStatus(freezer, scope) {
+                    return function(options) {
+                        var target = options.target;
+                        if (!target.refId) {
+                            return;
+                        }
+
+                        scope.bubbles.child(target.refId).child("frozenBy").set(freezer);
+                        applyScope();
+                    };
+                }
+
+                function handleFreezingForBubble(data) {
+                    if (data.frozenBy && data.frozenBy !== scope.username) {
+                        codiag.getBubble(data.id).freeze();
+                    } else if (!data.frozenBy) {
+                        codiag.getBubble(data.id).unfreeze();
+                    }
+                }
+
+                function bubbleInitializer(bubble) {
+                    codiag.createStandaloneBubble(bubble);
+                    handleFreezingForBubble(bubble);
+                }
+
                 return {
                     init: {
-                        bubbles: initializeWithSnapshot(codiag.createStandaloneBubble),
+                        bubbles: initializeWithSnapshot(bubbleInitializer),
                         connections: initializeWithSnapshot(codiag.createConnection)
                     },
                     local: {
@@ -53,6 +78,9 @@
                             if (codiag.getBubble(data.id)) {
                                 codiag.removeBubble(data, true);
                             }
+                        },
+                        handleFreezing: function(snapshot) {
+                            handleFreezingForBubble(snapshot.val());
                         }
                     },
                     remote: {
@@ -70,15 +98,8 @@
                             scope.bubbles.child(options.refId).remove();
                             applyScope();
                         },
-                        freeze: function(options) {
-                            var frozenByRef = scope.bubbles.child(options.refId).child("frozenBy");
-                            frozenByRef.once("value", function(snapshot){
-                                //.set(UserService.getCurrentUserName());
-                                console.log(snapshot.val());
-                            });
-                            
-                            applyScope();
-                        }
+                        freeze: changeFrozenStatus(scope.username, scope),
+                        unfreeze: changeFrozenStatus("", scope)
                     },
                 };
             };
