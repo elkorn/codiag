@@ -52,10 +52,11 @@
         console.log("changing currentlyEditedBubble to", (target ? target.id : target));
         if (currentlyEditedBubble) {
             currentlyEditedBubble.isInEditMode = false;
+            var isEditing = !!currentlyEditedBubble.getText();
             applyTextChangesToEditedBubble();
             var editedBubble = codiag.getBubble(currentlyEditedBubble.id);
             if (editedBubble.getText().length) {
-                codiag.canvas.fire("bubble:created", {
+                codiag.canvas.fire((isEditing ? "bubble:text:changed" : "bubble:created"), {
                     target: editedBubble
                 });
             } else {

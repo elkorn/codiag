@@ -120,8 +120,8 @@
         },
         freeze: function(freezer) {
             if (codiag.canvas.getActiveObject() === this.shape) {
-                // TODO: cancel editing etc.
-                //codiag.canvas.setActiveObject(null);
+                codiag.cancelEditing();
+                codiag.canvas.setActiveObject(null);
             }
 
             this.shape.item(0).set(codiag.style.bubble.frozen);

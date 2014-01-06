@@ -37,6 +37,8 @@
             return result;
         });
 
+        console.log("bound space");
+
         Mousetrap.bind(hotkeys.ADD_BUBBLE, function() {
             var activeObject = codiag.canvas.getActiveObject();
             if ((activeObject && !activeObject.isInEditMode) || !activeObject) {

@@ -3,10 +3,6 @@
 
     angular.module("codiagApp")
         .service("DiagramSynchronizer", function DiagramSynchronizer(Userservice) {
-            function canUnfreeze(id) {
-                return codiag.getBubble(id).frozenBy === Userservice.getCurrentUserName();
-            }
-
             return function synchronizeWithScope(scope) {
                 function applyScope() {
                     if (!scope.$$phase) {
@@ -52,9 +48,21 @@
                     }
                 }
 
-                function bubbleInitializer(bubble) {
-                    codiag.createStandaloneBubble(bubble);
-                    handleFreezingForBubble(bubble);
+                function synchronizeTextChangesForBubble(bubble) {
+                    scope.bubbles.child(bubble.refId).child("text").on("value", function(snapshot) {
+                        var text = snapshot.val();
+                        if (text) {
+                            if (text !== bubble.getText()) {
+                                bubble.setText(text);
+                            }
+                        }
+                    });
+                }
+
+                function bubbleInitializer(bubbleData) {
+                    codiag.createStandaloneBubble(bubbleData);
+                    handleFreezingForBubble(bubbleData);
+                    synchronizeTextChangesForBubble(codiag.getBubble(bubbleData.id));
                 }
 
                 return {
@@ -90,20 +98,31 @@
                     remote: {
                         addBubble: function(data) {
                             var dto = data.target.serialize();
-                            codiag.getBubble(dto.id).refId = scope.bubbles.push(dto);
+                            var bubble = codiag.getBubble(dto.id);
+                            bubble.refId = scope.bubbles.push(dto).name();
+                            synchronizeTextChangesForBubble(bubble);
                             applyScope();
                         },
-                        addConnection: function(options) {
-                            var connection = codiag.serializer.serializeConnection(options.target);
-                            codiag.getConnection(connection.id).refId = scope.connections.push(connection);
+                        addConnection: function(data) {
+                            var connection = codiag.serializer.serializeConnection(data.target);
+                            codiag.getConnection(connection.id).refId = scope.connections.push(connection).name();
                             applyScope();
                         },
-                        removeBubble: function(options) {
-                            scope.bubbles.child(options.refId).remove();
+                        removeBubble: function(data) {
+                            // remove connections.
+                            scope.bubbles.child(data.refId).remove();
                             applyScope();
                         },
                         freeze: changeFrozenStatus(Userservice.getCurrentUserName(), scope),
-                        unfreeze: changeFrozenStatus("", scope)
+                        unfreeze: changeFrozenStatus("", scope),
+                        changeBubbleText: function(data) {
+                            if (!data.target.refId) {
+                                return;
+                            }
+
+                            scope.bubbles.child(data.target.refId).child("text").set(data.target.getText());
+                            applyScope();
+                        }
                     },
                 };
             };

@@ -119,9 +119,13 @@
         });
 
         canvas.on("before:selection:cleared", function(data) {
-            canvas.fire("object:deselected", {
-                target: codiag.getBubble(data.target.id)
-            });
+            var deselectedBubble = codiag.getBubble(data.target.id);
+            if (deselectedBubble) {
+                // This means that the deselected bubble still exists - it has not been removed.
+                canvas.fire("object:deselected", {
+                    target: deselectedBubble
+                });
+            }
         });
     };
 
@@ -208,8 +212,16 @@
     codiag.removeConnection = function(connection) {
         Object.keys(bubbles).forEach(function(key) {
             var bubble = bubbles[key];
-            if (!codiag.util.removeIfContains(bubble.connections.input, connection)) {
-                codiag.util.removeIfContains(bubble.connections.output, connection);
+
+            var result = codiag.util.removeIfContains(bubble.connections.input, connection);
+            if (!result) {
+                result = codiag.util.removeIfContains(bubble.connections.output, connection);
+            }
+
+            if (result) {
+                codiag.canvas.fire("connection:removed", {
+                    target: connection
+                });
             }
         });
 
