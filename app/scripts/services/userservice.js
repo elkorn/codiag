@@ -9,7 +9,7 @@
             var auth = new FirebaseSimpleLogin(ref, function(error, user) {
                 if (error) {
                     // an error occurred while attempting login
-                    console.log(error);
+                    $rootScope.$broadcast("login:error", error);
                 } else if (user) {
                     // user authenticated with Firebase
                     loggedUser = user;

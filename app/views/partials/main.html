@@ -1,21 +1,37 @@
 <div ng-include="'partials/navbar'"></div>
 
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Panel title</h3>
+    </div>
+    <div class="panel-body">
+        <form name="myForm">
+        Email: <input type="email" class="form-control" ng-model="email" name="input" required>
+        Password: <input type="password" class="form-control" ng-model="pass" required>
+        </form>
+        <br />
+        <div class="panel panel-danger" ng-show="loginError">
+            <div class="panel-heading">
+                <h3 class="panel-title">Login error!</h3>
+            </div>
+            <div class="panel-body">
+                {{loginError}}
+            </div>
+        </div>
+        <button class="btn btn-default" type="button" ng-click="login()">
+            Login
+        </button>
+    </div>
+</div>
 
-
-<div class="jumbotron">
+<!--<div class="jumbotron">
     <h1>'Allo, 'Allo!</h1>
     <p class="lead">
         <img src="images/yeoman.png" alt="I'm Yeoman"><br>
         Always a pleasure scaffolding your apps.
     </p>
-    <div class="panel-body">
-        Email: <input type="text" class="form-control" ng-model="email">
-        Password: <input type="password" class="form-control" ng-model="pass">
-        <button class="btn btn-default" type="button" ng-click="login()">
-            Login
-        </button>
-    </div>
-<!--    <p><a class="btn btn-lg btn-success" ng-href="#/rooms">Go to rooms!</a></p>-->
+    
+    <p><a class="btn btn-lg btn-success" ng-href="#/rooms">Go to rooms!</a></p>
 </div>
 
 <div class="row marketing">
@@ -27,4 +43,4 @@
 
 <div class="footer">
     <p>♥ from the Yeoman team</p>
-</div>
+</div>-->
