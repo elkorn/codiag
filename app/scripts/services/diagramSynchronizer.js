@@ -10,7 +10,7 @@
                     }
                 }
 
-                function initializeWithSnapshot(initializer) {
+                function initializeSnapshotWith(initializer) {
                     function initialize(data) {
                         return function(key) {
                             var element = data[key];
@@ -31,7 +31,8 @@
                 function changeFrozenStatus(freezer, scope) {
                     return function(options) {
                         var target = options.target;
-                        if (!target.refId) {
+                        if (!(target && target.refId)) {
+                            // the element has been removed - there is nothing to change.
                             return;
                         }
 
@@ -54,6 +55,7 @@
                         if (text) {
                             if (text !== bubble.getText()) {
                                 bubble.setText(text);
+                                handleFreezingForBubble(bubble);
                             }
                         }
                     });
@@ -67,8 +69,8 @@
 
                 return {
                     init: {
-                        bubbles: initializeWithSnapshot(bubbleInitializer),
-                        connections: initializeWithSnapshot(codiag.createConnection)
+                        bubbles: initializeSnapshotWith(bubbleInitializer),
+                        connections: initializeSnapshotWith(codiag.createConnection)
                     },
                     local: {
                         addBubble: function(snapshot) {
@@ -109,8 +111,11 @@
                             applyScope();
                         },
                         removeBubble: function(data) {
-                            // remove connections.
                             scope.bubbles.child(data.refId).remove();
+                            applyScope();
+                        },
+                        removeConnection: function(data) {
+                            scope.connections.child(data.target.refId).remove();
                             applyScope();
                         },
                         freeze: changeFrozenStatus(Userservice.getCurrentUserName(), scope),

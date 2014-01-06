@@ -68,7 +68,7 @@
         var self = this;
 
         this.shape = createBubbleObject(this.options);
-        this.frozenBy = "";
+        this.frozenBy = originalOptions.frozenBy || "";
         this.connections = connections || {
             input: [],
             output: []
@@ -88,7 +88,6 @@
             return this.shape.item(1).getText();
         },
         setText: function(newText) {
-            console.log("setting text");
             this.options.canvas.remove(this.shape);
             var workingOptions = codiag.util.extendClone(this.options, {
                 text: newText,

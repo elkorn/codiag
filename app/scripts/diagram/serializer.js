@@ -15,7 +15,9 @@
         deserializeConnectionOptions: function(serializedOptions) {
             return {
                 from: codiag.getBubble(serializedOptions.from),
-                to: codiag.getBubble(serializedOptions.to)
+                to: codiag.getBubble(serializedOptions.to),
+                id: serializedOptions.id,
+                refId: serializedOptions.refId
             };
         }
     };

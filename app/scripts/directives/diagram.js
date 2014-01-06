@@ -52,12 +52,17 @@
                         scope.connections.on("child_added", synchronizer.local.addConnection);
                         // scope.connections.on("child_removed", synchronizer.local.removeConnection);
                         codiag.canvas.on("connection:created", synchronizer.remote.addConnection);
-                        // codiag.canvas.on("connection:removed", synchronizer.remote.removeConnection);
+                        codiag.canvas.on("connection:removed", synchronizer.remote.removeConnection);
 
                         scope.bubbles.on("child_changed", synchronizer.local.handleFreezing);
                         codiag.canvas.on("object:selected", function(data) {
                             var bubble = codiag.getBubble(data.target.id);
                             var id = bubble.id;
+                            if(!bubble.getText()) {
+                                // The bubble has not been yet fully created.
+                                return;
+                            }
+
                             if (scope.currentlyFrozenBubble && scope.currentlyFrozenBubble !== id) {
                                 synchronizer.remote.unfreeze({
                                     target: codiag.getBubble(scope.currentlyFrozenBubble)
