@@ -8,7 +8,7 @@ angular.module("codiagApp")
     },
     {
       "title": "About",
-      "link": "#"
+      "link": "/about"
     },
     {
       "title": "Contact",

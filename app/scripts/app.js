@@ -9,22 +9,26 @@ angular.module("codiagApp", [
         .when("/", {
             templateUrl: "partials/main",
             controller: "MainCtrl",
-            access: 'all'
+            access: "all"
         })
         .when("/login", {
             templateUrl: "partials/login",
             controller: "LoginCtrl",
-            access: 'not-user'
+            access: "not-user"
         })
         .when("/rooms", {
             templateUrl: "partials/rooms",
             controller: "RoomsCtrl",
-            access: 'user'
+            access: "user"
         })
         .when("/rooms/:roomId", {
             templateUrl: "partials/diagram-room",
             controller: "DiagramCtrl",
-            access: 'user'
+            access: "user"
+        })
+        .when("/about", {
+          templateUrl: "partials/about",
+          controller: "AboutCtrl"
         })
         .otherwise({
             redirectTo: "/"
@@ -40,12 +44,12 @@ angular.module("codiagApp", [
         // will move this somewhere else eventually
         UserRoomService.roomUnregisterUser();
         if ( !Userservice.isUserLogged() ) {
-            if (next.access === 'user') {
+            if (next.access === "user") {
                 $location.path("/login");
             }
         }
         else {
-            if (next.access === 'not-user') {
+            if (next.access === "not-user") {
                 $location.path("/");
             }
         }

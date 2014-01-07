@@ -1,0 +1,9 @@
+<div ng-include="'partials/navbar'"></div>
+
+<div class="row marketing">
+    <h2>To make you happy, we're using:</h2>
+    <div ng-repeat="thing in awesomeThings | orderBy:'-awesomeness'">
+        <h4>{{thing.name}}</h4>
+        <p>{{thing.info}}</p>
+    </div>
+</div>
