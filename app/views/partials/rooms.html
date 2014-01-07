@@ -2,14 +2,15 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        <h3 class="panel-title">This is the rooms view.</h3> <br />
+        <h3 class="panel-title">This is the rooms view.</h3>
+        <br />
         <button type="button" class="btn btn-default btn-medium" ng-click="showNewRoomForm()">
             <span class="glyphicon glyphicon-plus"></span>
         </button>
     </div>
 
     <div class="panel-body" ng-show="newRoom">
-        
+
         <div class="input-group">
             <span class="input-group-addon">Name:</span>
             <input type="text" class="form-control" ng-model="newRoomName">
@@ -25,25 +26,26 @@
             </span>
         </div>
     </div>
-    
+
     <ul class="list-group">
-        <li class="list-group-item" data-ng-repeat="room in rooms">
-            <a
-                ng-show="room.usernames.length"
-                data-ng-href="#/rooms/{{getRoomIndex($index)}}"
+        <li class="clearfix list-group-item"
+            data-ng-repeat="room in rooms">
+            <p  class="pull-left room-popover-container"
+                data-ng-show="room.usernames.length"
                 data-toggle="popover"
-                data-placement="bottom"
+                data-placement="right"
                 title=""
                 data-content="{{listUsers(room.usernames)}}"
                 data-original-title="Users:">
-                {{room.name}}
-                <span  class="badge" >{{room.usernames.length}}</span>
-            </a>
-            <a
-                ng-hide="room.usernames.length"
-                data-ng-href="#/rooms/{{getRoomIndex($index)}}">
-                {{room.name}} 
-            </a>
+                <a data-ng-href="#/rooms/{{getRoomIndex($index)}}">
+                    {{room.name}}
+                    <span  class="badge">{{room.usernames.length}}</span>
+                </a>
+            </p>
+
+            <p data-ng-hide="room.usernames.length">
+                <a data-ng-href="#/rooms/{{getRoomIndex($index)}}">{{room.name}}</a>
+            </p>
         </li>
     </ul>
 </div>

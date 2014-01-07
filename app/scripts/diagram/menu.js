@@ -9,6 +9,7 @@
 
     function disable(id) {
         document.getElementById(id).disabled = "true";
+        $(asId(id)).tooltip("hide");
     }
 
     function asId(elem) {
