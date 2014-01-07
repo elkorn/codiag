@@ -1,6 +1,7 @@
 "use strict";
 
 angular.module("codiagApp")
-  .controller("MainCtrl", function ($scope) {
+  .controller("MainCtrl", function ($rootScope) {
     $scope.loginError = '';
+    $rootScope.pageTitle = "Codiag";
   });

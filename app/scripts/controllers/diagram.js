@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("codiagApp")
-        .controller("DiagramCtrl", function($scope, $routeParams, DiagramService, RoomsService, Userservice, UserRoomService) {
+        .controller("DiagramCtrl", function($scope, $rootScope, $routeParams, DiagramService, RoomsService, Userservice, UserRoomService) {
             var currentRoomId = $routeParams.roomId;
             $scope.room = null;
             RoomsService.getRoom(currentRoomId).on("value", function(snapshot) {
@@ -11,6 +11,12 @@
                     $scope.$apply();
                 }
             });
+
+            $scope.$on("$routeChangeStart", function(){
+                $rootScope.pageTitle = "";
+            });
+
+            $rootScope.pageTitle = $scope.room.name + " - Codiag";
 
             $scope.diagram = DiagramService.getDiagram(currentRoomId);
             $scope.bubbles = $scope.diagram.child("bubbles");
