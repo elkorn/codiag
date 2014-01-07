@@ -215,24 +215,15 @@
         }
     };
 
-    codiag.removeConnection = function(connection) {
-        Object.keys(bubbles).forEach(function(key) {
-            var bubble = bubbles[key];
-
-            var result = codiag.util.removeIfContains(bubble.connections.input, connection);
-            if (!result) {
-                result = codiag.util.removeIfContains(bubble.connections.output, connection);
-            }
-
-            if (result) {
-                codiag.canvas.fire("connection:removed", {
-                    target: connection
-                });
-            }
-        });
-
-        delete connections[connection.id];
+    codiag.removeConnection = function(connectionId) {
+        var connection = codiag.getConnection(connectionId);
+        connection.from.connections.output.splice(connection.from.connections.output.indexOf(connection), 1);
+        connection.to.connections.input.splice(connection.to.connections.input.indexOf(connection), 1);
         canvas.remove(connection);
+        codiag.canvas.fire("connection:removed", {
+            target: connection
+        });
+        delete connections[connection.id];
         connection = null;
     };
 
@@ -240,8 +231,8 @@
         var toRemove = bubbles[(typeof(bubble) === "string" ? bubble : bubble.id)];
         var refId = toRemove.refId;
         var removeConnection = codiag.removeConnection.bind(codiag);
-        toRemove.connections.input.forEach(removeConnection);
-        toRemove.connections.output.forEach(removeConnection);
+        toRemove.connections.input.map(codiag.util.get("id")).forEach(removeConnection);
+        toRemove.connections.output.map(codiag.util.get("id")).forEach(removeConnection);
         delete bubbles[toRemove.id];
         canvas.remove(toRemove.shape);
         disableCreationMode();
