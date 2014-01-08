@@ -7,6 +7,7 @@
             $scope.room = null;
             RoomsService.getRoom(currentRoomId).on("value", function(snapshot) {
                 $scope.room = snapshot.val();
+                $rootScope.pageTitle = $scope.room.name + " - Codiag";
                 if (!$scope.$$phase) {
                     $scope.$apply();
                 }
@@ -15,8 +16,6 @@
             $scope.$on("$routeChangeStart", function(){
                 $rootScope.pageTitle = "";
             });
-
-            $rootScope.pageTitle = $scope.room.name + " - Codiag";
 
             $scope.diagram = DiagramService.getDiagram(currentRoomId);
             $scope.bubbles = $scope.diagram.child("bubbles");

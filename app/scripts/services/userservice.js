@@ -44,10 +44,12 @@
                     return auth;
                 },
                 getCurrentUserName: function() {
-                    return loggedUser.email;
+                    if (loggedUser) 
+                        return loggedUser.email;
                 },
                 getCurrentUserId: function() {
-                    return loggedUser.id;
+                    if (loggedUser) 
+                        return loggedUser.id;
                 },
                 login: function(email, password) {
                     auth.login("password", {
@@ -63,7 +65,7 @@
                     if (loggedUser)
                         return loggedUser.id;
                     else
-                        return null;
+                        return false;
                 },
                 register: function(email, password) {
                     auth.createUser(email, password, function(error, user) {
