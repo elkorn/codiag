@@ -20,10 +20,12 @@
         codiag.canvas.fire("mode:creation:disabled");
     }
 
-    function enableCreationMode() {
+    function enableCreationMode(kind) {
         if (!isInCreationMode) {
             isInCreationMode = true;
-            codiag.canvas.fire("mode:creation:enabled");
+            codiag.canvas.fire("mode:creation:enabled", {
+                kind: kind
+            });
         }
     }
 

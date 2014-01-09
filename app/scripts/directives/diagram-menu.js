@@ -16,6 +16,7 @@
                     scope.username = function() {
                         return Userservice.getCurrentUserName();
                     };
+
                 }
             };
         });

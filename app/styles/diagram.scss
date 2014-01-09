@@ -17,4 +17,10 @@
     .navbar-brand {
         line-height: 31px;
     }
+
+    .editing-alert {
+        position: fixed;
+        top: 70px;
+        z-index: 1000;
+    }
 }

@@ -1,5 +1,6 @@
 <div class="diagram-room">
     <div data-diagram-menu></div>
+    <div class="alert alert-info editing-alert" ng-show="isEditingABubble">To apply changes, <strong>click somewhere on the canvas</strong>. To remove the bubble, <strong>leave the textbox empty</strong>.</div>
     <div data-diagram="diagram">
         <!-- <div ng-repeat="bubble in bubbles" class="bubble" id="{{bubble.id}}" data-left="{{bubble.left}}" data-top="{{bubble.top}}" data-text="{{bubble.text}}" data-frozen="{{bubble.frozen}}"></div>
     <div ng-repeat="conn in connections" class="connection" id="{{conn.id}}"  data-from="{{conn.from}}" data-to="{{conn.to}}"></div>
