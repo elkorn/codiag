@@ -14,6 +14,7 @@ var api = require("./lib/controllers/api"),
     index = require("./lib/controllers");
 
 app.get("/api/awesomeThings", api.awesomeThings);
+app.get("/api/authors", api.authors);
 // Angular Routes
 app.get("/partials/*", index.partials);
 app.get("/*", index.index);

@@ -23,7 +23,9 @@
         textInput.style["max-width"] = textInput.style["min-width"] = pixels(currentlyEditedBubble.getWidth() - codiag.style.bubble.padding);
         textInput.style["max-height"] = textInput.style["min-height"] = pixels(currentlyEditedBubble.getHeight() - codiag.style.bubble.padding);
         textInput.style.position = "absolute";
-        textInput.style["border-radius"] = textInput.style.padding = pixels(15);
+        textInput.style.outline = "none";
+        textInput.style["border-radius"] = pixels(15);
+        fabric.util.object.extend(textInput.style, codiag.style.textInput);
         updateInputPosition();
         textInput.value = codiag.getBubble(currentlyEditedBubble.id).getText();
         textInput.style.resize = "none";

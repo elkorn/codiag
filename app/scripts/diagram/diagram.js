@@ -150,10 +150,6 @@
             });
         }
 
-        if (shouldBeEditableImmediately && !options.hasOwnProperty("width")) {
-            options.width = 100;
-        }
-
         var result = new codiag.Bubble(options);
         var id = options.id || codiag.util.uuid();
         result.id = result.shape.id = id;

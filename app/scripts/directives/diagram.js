@@ -1,8 +1,8 @@
-(function(window, fabric, codiag, $, undefined) {
+(function (window, fabric, codiag, $, undefined) {
     "use strict";
 
     angular.module("codiagApp")
-        .directive("diagram", function(DiagramSynchronizer) {
+        .directive("diagram", function (DiagramSynchronizer) {
             return {
                 templateUrl: "partials/diagram.html",
                 replace: false,
@@ -19,7 +19,7 @@
                     scope.$on("$routeChangeStart", codiag.disableDiagramHotkeys);
 
                     function unfreezeBubbleOnRouteChange(data) {
-                        scope.$on("$routeChangeStart", function() {
+                        scope.$on("$routeChangeStart", function () {
                             synchronizer.remote.unfreeze({
                                 target: codiag.getBubble(data.id)
                             });
@@ -34,12 +34,14 @@
                             scope.$apply();
                         }
 
-                        scope.bubbles.once("value", function(snapshot) {
+                        scope.bubbles.once("value", function (snapshot) {
                             synchronizer.init.bubbles(snapshot);
                             var data = snapshot.val();
-                            Object.keys(data).forEach(function(key){
-                                unfreezeBubbleOnRouteChange(data[key]);
-                            });
+                            if (data) {
+                                Object.keys(data).forEach(function (key) {
+                                    unfreezeBubbleOnRouteChange(data[key]);
+                                });
+                            }
                         });
 
                         scope.connections.once("value", synchronizer.init.connections);
@@ -57,10 +59,10 @@
                         codiag.canvas.on("connection:removed", synchronizer.remote.removeConnection);
 
                         scope.bubbles.on("child_changed", synchronizer.local.handleFreezing);
-                        codiag.canvas.on("object:selected", function(data) {
+                        codiag.canvas.on("object:selected", function (data) {
                             var bubble = codiag.getBubble(data.target.id);
                             var id = bubble.id;
-                            if(!bubble.getText()) {
+                            if (!bubble.getText()) {
                                 // The bubble has not been yet fully created.
                                 return;
                             }

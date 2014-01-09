@@ -12,7 +12,7 @@ angular.module("codiagApp")
     },
     {
       "title": "Contact",
-      "link": "#"
+      "link": "/contact"
     }];
 
     $scope.logout = function() {

@@ -1,4 +1,4 @@
-(function(window, fabric, codiag, $, undefined) {
+(function (window, fabric, codiag, $, undefined) {
     "use strict";
 
     var buttons;
@@ -16,7 +16,7 @@
         if (Array.isArray(elem)) {
             return elem.map(asId);
         } else {
-            if (typeof(elem) === "string") {
+            if (typeof (elem) === "string") {
                 return "#" + elem;
             } else {
                 throw new TypeError("string required.");
@@ -29,7 +29,10 @@
     }
 
     function showPopover(id) {
-        $(asId(id)).popover("show");
+        var $elem = $(asId(id));
+        if (!$elem.is("visible")) {
+            $elem.popover("show");
+        }
     }
 
     function disableCreationButtons() {
@@ -59,7 +62,7 @@
         hidePopover([buttons.ADD_STANDALONE, buttons.ADD_CHILD, buttons.CONNECT]);
     }
 
-    codiag.initializeDiagramMenu = function() {
+    codiag.initializeDiagramMenu = function () {
         buttons = {
             ADD_STANDALONE: "addStandalone",
             ADD_CHILD: "addChild",
@@ -67,24 +70,33 @@
             CONNECT: "connect"
         };
 
-        codiag.canvas.on("selection:cleared", function() {
+        var $addStandalone = $(asId(buttons.ADD_STANDALONE)),
+            $addChild = $(asId(buttons.ADD_CHILD)),
+            $remove = $(asId(buttons.REMOVE)),
+            $connect = $(asId(buttons.CONNECT));
+
+        codiag.canvas.on("selection:cleared", function () {
             disableCreationButtons();
-            $(asId(buttons.ADD_CHILD)).popover("hide");
+            $addChild.popover("hide");
         });
-
         codiag.canvas.on("object:selected", enableCreationButtons);
-
-
         codiag.canvas.on("mode:creation:disabled", handleCreationModeDisabled);
         codiag.canvas.on("mode:creation:enabled", handleCreationModeEnabled);
-        codiag.canvas.on("mode:connection:enabled", function() {
-            showPopover(buttons.CONNECT);
+        codiag.canvas.on("mode:connection:enabled", function () {
+            if ($connect.__clicked) {
+                $connect.__clicked = false;
+            } else {
+                showPopover(buttons.CONNECT);
+            }
         });
 
-        $(asId(buttons.ADD_STANDALONE)).on("click", codiag.toggleStandaloneCreationMode.bind(codiag));
-        $(asId(buttons.ADD_CHILD)).on("click", codiag.toggleChildCreationMode.bind(codiag));
-        $(asId(buttons.REMOVE)).on("click", codiag.removeCurrentBubble.bind(codiag));
-        $(asId(buttons.CONNECT)).on("click", codiag.toggleConnectionMode.bind(codiag));
+        $addStandalone.on("click", codiag.toggleStandaloneCreationMode.bind(codiag));
+        $addChild.on("click", codiag.toggleChildCreationMode.bind(codiag));
+        $remove.on("click", codiag.removeCurrentBubble.bind(codiag));
+        $connect.on("click", function () {
+            $connect.__clicked = true;
+            codiag.toggleConnectionMode();
+        });
 
         $("[data-toggle*='popover']").popover();
         $("[data-toggle*='tooltip']").tooltip();

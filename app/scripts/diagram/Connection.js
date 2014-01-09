@@ -2,11 +2,11 @@
     "use strict";
 
     var defaults = {
-        stroke: "red",
-        fill: "red",
+        stroke: codiag.style.connection.stroke,
+        fill: codiag.style.connection.fill,
         originX: "center",
         originY: "center",
-        strokeWidth: 5,
+        strokeWidth: codiag.style.connection.strokeWidth,
         selectable: false
     };
 

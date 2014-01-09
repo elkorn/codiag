@@ -30,6 +30,10 @@ angular.module("codiagApp", [
           templateUrl: "partials/about",
           controller: "AboutCtrl"
         })
+        .when("/contact", {
+          templateUrl: "partials/contact",
+          controller: "ContactCtrl"
+        })
         .otherwise({
             redirectTo: "/"
         });
