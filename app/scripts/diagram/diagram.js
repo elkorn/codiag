@@ -259,7 +259,7 @@
         if (!isInCreationMode) {
             var activeObject = codiag.canvas.getActiveObject();
             if (activeObject) {
-                enableCreationMode();
+                enableCreationMode("connection");
                 codiag.canvas.fire("mode:connection:enabled");
                 connectionOrigin = codiag.getBubble(activeObject.id);
                 codiag.canvas.on("object:selected", createConnectionOnDemand);
