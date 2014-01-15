@@ -116,12 +116,14 @@
         },
         setLeft: function (left) {
             var result = this.shape.setLeft(left);
+            this.shape.setCoords();
             this.updateConnections();
             codiag.canvas.renderAll();
             return result;
         },
         setTop: function (top) {
             var result = this.shape.setTop(top);
+            this.shape.setCoords();
             this.updateConnections();
             codiag.canvas.renderAll();
             return result;
@@ -156,6 +158,7 @@
             });
             this.shape.selectable = false;
             this.frozenBy = freezer;
+            console.log("Freezing: ", this.getText());
             codiag.canvas.renderAll();
             return this;
         },
@@ -165,8 +168,9 @@
                 fill: codiag.style.bubble.normal.fontColor
             });
             this.shape.selectable = true;
-            codiag.canvas.renderAll();
             this.frozenBy = "";
+            console.log("Unfreezing: ", this.getText());
+            codiag.canvas.renderAll();
             return this;
         }
     };

@@ -1,4 +1,4 @@
-(function(window, angular, codiag, undefined) {
+(function (window, angular, codiag, undefined) {
     "use strict";
 
     angular.module("codiagApp")
@@ -12,14 +12,14 @@
 
                 function initializeSnapshotWith(initializer) {
                     function initialize(data) {
-                        return function(key) {
+                        return function (key) {
                             var element = data[key];
                             element.refId = key;
                             initializer(element);
                         };
                     }
 
-                    return function(snapshot) {
+                    return function (snapshot) {
                         var data = snapshot.val();
                         if (data) {
                             codiag.util.getIndex(data)
@@ -29,33 +29,41 @@
                 }
 
                 function changeFrozenStatus(freezer, scope) {
-                    return function(options) {
+                    return function (options) {
                         var target = options.target;
                         if (!(target && target.refId)) {
                             // the element has been removed - there is nothing to change.
                             return;
                         }
 
+                        console.log("Changing frozenBy to", freezer);
+
                         scope.bubbles.child(target.refId).child("frozenBy").set(freezer);
                         applyScope();
                     };
                 }
 
-                function handleFreezingForBubble(data) {
-                    if (data.frozenBy && data.frozenBy !== Userservice.getCurrentUserName()) {
-                        codiag.getBubble(data.id).freeze();
-                    } else if (!data.frozenBy) {
-                        codiag.getBubble(data.id).unfreeze();
-                    }
+                function handleFreezingForBubble(bubbleData) {
+                    scope.bubbles.child(bubbleData.refId).child("frozenBy").on("value", function (snapshot) {
+                        var frozenBy = snapshot.val();
+                        var bubble = codiag.getBubble(bubbleData.id);
+                        if (frozenBy && frozenBy !== Userservice.getCurrentUserName()) {
+                            bubble.freeze(frozenBy);
+                        } else if (!frozenBy &&
+                            bubble.frozenBy &&
+                            bubble.frozenBy !== Userservice.getCurrentUserName()) {
+                            bubble.unfreeze();
+                        }
+                    });
                 }
 
                 function synchronizeTextChangesForBubble(bubble) {
-                    scope.bubbles.child(bubble.refId).child("text").on("value", function(snapshot) {
+                    scope.bubbles.child(bubble.refId).child("text").on("value", function (snapshot) {
                         var text = snapshot.val();
                         if (text) {
                             if (text !== bubble.getText()) {
                                 bubble.setText(text);
-                                handleFreezingForBubble(bubble);
+                                // handleFreezingForBubble(bubble);
                             }
                         }
                     });
@@ -64,19 +72,19 @@
                 function synchronizeCoordinateChangesForBubble(bubble) {
                     var childRef = scope.bubbles.child(bubble.refId);
 
-                    childRef.child("left").on("value", function(snapshot) {
+                    childRef.child("left").on("value", function (snapshot) {
                         bubble.setLeft(snapshot.val());
                     });
 
-                    childRef.child("top").on("value", function(snapshot) {
+                    childRef.child("top").on("value", function (snapshot) {
                         bubble.setTop(snapshot.val());
                     });
                 }
 
                 function bubbleInitializer(bubbleData) {
                     codiag.createStandaloneBubble(bubbleData);
-                    handleFreezingForBubble(bubbleData);
                     var bubble = codiag.getBubble(bubbleData.id);
+                    handleFreezingForBubble(bubbleData);
                     synchronizeTextChangesForBubble(bubble);
                     synchronizeCoordinateChangesForBubble(bubble);
                 }
@@ -87,44 +95,44 @@
                         connections: initializeSnapshotWith(codiag.createConnection)
                     },
                     local: {
-                        addBubble: function(snapshot) {
+                        addBubble: function (snapshot) {
                             var data = snapshot.val();
                             if (!codiag.getBubble(data.id)) {
                                 data.refId = snapshot.name();
                                 bubbleInitializer(data);
                             }
                         },
-                        addConnection: function(snapshot) {
+                        addConnection: function (snapshot) {
                             var data = snapshot.val();
                             if (!codiag.getConnection(data.id)) {
                                 data.refId = snapshot.name();
                                 codiag.createConnection(data);
                             }
                         },
-                        removeBubble: function(snapshot) {
+                        removeBubble: function (snapshot) {
                             var data = snapshot.val();
                             if (codiag.getBubble(data.id)) {
                                 codiag.removeBubble(data, true);
                             }
                         },
-                        handleFreezing: function(snapshot) {
+                        handleFreezing: function (snapshot) {
                             handleFreezingForBubble(snapshot.val());
                         }
                     },
                     remote: {
-                        addBubble: function(data) {
+                        addBubble: function (data) {
                             var dto = data.target.serialize();
                             var bubble = codiag.getBubble(dto.id);
                             bubble.refId = scope.bubbles.push(dto).name();
                             synchronizeTextChangesForBubble(bubble);
                             applyScope();
                         },
-                        addConnection: function(data) {
+                        addConnection: function (data) {
                             var connection = codiag.serializer.serializeConnection(data.target);
                             codiag.getConnection(connection.id).refId = scope.connections.push(connection).name();
                             applyScope();
                         },
-                        removeBubble: function(data) {
+                        removeBubble: function (data) {
                             if (!data.refId) {
                                 return;
                             }
@@ -132,8 +140,8 @@
                             scope.bubbles.child(data.refId).remove();
                             applyScope();
                         },
-                        removeConnection: function(data) {
-                            if(!data.target.refId) {
+                        removeConnection: function (data) {
+                            if (!data.target.refId) {
                                 return;
                             }
 
@@ -142,7 +150,7 @@
                         },
                         freeze: changeFrozenStatus(Userservice.getCurrentUserName(), scope),
                         unfreeze: changeFrozenStatus("", scope),
-                        changeBubbleText: function(data) {
+                        changeBubbleText: function (data) {
                             if (!data.target.refId) {
                                 return;
                             }
@@ -150,7 +158,7 @@
                             scope.bubbles.child(data.target.refId).child("text").set(data.target.getText());
                             applyScope();
                         },
-                        moveBubble: function(data) {
+                        moveBubble: function (data) {
                             var refId = data.target.refId;
                             if (!refId) {
                                 return;

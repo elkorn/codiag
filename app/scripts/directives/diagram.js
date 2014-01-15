@@ -2,7 +2,7 @@
     "use strict";
 
     angular.module("codiagApp")
-        .directive("diagram", function (DiagramSynchronizer) {
+        .directive("diagram", function (DiagramSynchronizer, Userservice) {
             return {
                 templateUrl: "partials/diagram.html",
                 replace: false,
@@ -20,9 +20,12 @@
 
                     function unfreezeBubbleOnRouteChange(data) {
                         scope.$on("$routeChangeStart", function () {
-                            synchronizer.remote.unfreeze({
-                                target: codiag.getBubble(data.id)
-                            });
+                            var bubble = codiag.getBubble(data.id);
+                            if (bubble.frozenBy === Userservice.getCurrentUserName()) {
+                                synchronizer.remote.unfreeze({
+                                    target: bubble
+                                });
+                            }
                         });
                     }
 
@@ -57,7 +60,7 @@
                         codiag.canvas.on("connection:created", synchronizer.remote.addConnection);
                         codiag.canvas.on("connection:removed", synchronizer.remote.removeConnection);
 
-                        scope.bubbles.on("child_changed", synchronizer.local.handleFreezing);
+                        // scope.bubbles.on("child_changed", synchronizer.local.handleFreezing);
                         codiag.canvas.on("object:selected", function (data) {
                             var bubble = codiag.getBubble(data.target.id);
                             var id = bubble.id;
