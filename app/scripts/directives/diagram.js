@@ -17,16 +17,19 @@
                     scope.$emit("codiag:diagram:initialized");
 
                     scope.$on("$routeChangeStart", codiag.disableDiagramHotkeys);
-
-                    function unfreezeBubbleOnRouteChange(data) {
-                        scope.$on("$routeChangeStart", function () {
-                            var bubble = codiag.getBubble(data.id);
+                    function unfreezeOwnedBubble(bubbleData) {
+                        return function handler() {
+                            var bubble = codiag.getBubble(bubbleData.id);
                             if (bubble.frozenBy === Userservice.getCurrentUserName()) {
                                 synchronizer.remote.unfreeze({
                                     target: bubble
                                 });
                             }
-                        });
+                        };
+                    }
+
+                    function unfreezeBubbleOnRouteChange(data) {
+                        scope.$on("$routeChangeStart",unfreezeOwnedBubble(data));
                     }
 
                     scope.diagram.once("value", function initializeData() {
