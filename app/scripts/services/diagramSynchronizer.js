@@ -63,7 +63,6 @@
                         if (text) {
                             if (text !== bubble.getText()) {
                                 bubble.setText(text);
-                                // handleFreezingForBubble(bubble);
                             }
                         }
                     });

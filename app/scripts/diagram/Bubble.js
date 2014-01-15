@@ -158,7 +158,6 @@
             });
             this.shape.selectable = false;
             this.frozenBy = freezer;
-            console.log("Freezing: ", this.getText());
             codiag.canvas.renderAll();
             return this;
         },
@@ -169,7 +168,6 @@
             });
             this.shape.selectable = true;
             this.frozenBy = "";
-            console.log("Unfreezing: ", this.getText());
             codiag.canvas.renderAll();
             return this;
         }
