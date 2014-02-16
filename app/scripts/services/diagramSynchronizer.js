@@ -38,9 +38,10 @@
 
                         scope.bubbles.child(target.refId).child("frozenBy").set(freezer);
                         if (freezer !== "") {
-                            scope.bubbles.child(target.refId).child("frozenBy").onDisconnect().set("");
-                        }
-                        else {
+                            if (freezer === Userservice.getCurrentUserName()) {
+                                scope.bubbles.child(target.refId).child("frozenBy").onDisconnect().set("");
+                            }
+                        } else {
                             scope.bubbles.child(target.refId).child("frozenBy").onDisconnect().cancel();
                         }
                         applyScope();
