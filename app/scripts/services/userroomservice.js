@@ -4,9 +4,8 @@
     var pathUsersTemplate = "https://codiag.firebaseio.com/rooms/:roomId/users/";
     angular.module('codiagApp')
         .service('UserRoomService', function UserRoomService() {
-            console.log('URS init');
             var refRegistered = null;
-            
+
             return {
                 roomRegisterUser: function (roomId, username) {
                     var path = pathRegisterTemplate.replace(":userId", Math.uuid());

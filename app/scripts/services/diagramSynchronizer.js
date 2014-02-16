@@ -36,8 +36,6 @@
                             return;
                         }
 
-                        console.log("Changing frozenBy to", freezer);
-
                         scope.bubbles.child(target.refId).child("frozenBy").set(freezer);
                         applyScope();
                     };
