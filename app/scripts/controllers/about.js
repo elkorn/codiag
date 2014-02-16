@@ -5,4 +5,8 @@ angular.module("codiagApp")
     $http.get("/api/awesomeThings").success(function(awesomeThings) {
       $scope.awesomeThings = awesomeThings;
     });
+
+    $http.get("/api/version").success(function(version) {
+      $scope.version = version;
+    });
   });
