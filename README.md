@@ -2,4 +2,6 @@ codiag
 ======
 
 A simple collaborative diagramming tool.
-A more sophisticated readme will come when the project starts to make sense.
+Done as an mvp, still remains at v0.0.5. :smile:
+
+The app is live on http://codiag.herokuapp.com/.
